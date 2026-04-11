@@ -25,6 +25,10 @@ const SCREENS = {
   setupComplete:      `${CDN}/09_setup_complete_94b15a5d.png`,
   eventsInbox:        `${CDN}/10_events_inbox_93ac8d67.png`,
   liveView:           `${CDN}/11_live_view_1c5894c1.png`,
+  // Kiosk device UI (real screenshots from desktop-app)
+  kioskSetup:         `${CDN}/kiosk_setup_screen_10c29156.png`,
+  kioskPin:           `${CDN}/kiosk_pin_screen_57be2b79.png`,
+  kioskLoading:       `${CDN}/kiosk_loading_screen_f407c95c.png`,
 };
 
 interface Step {
@@ -347,8 +351,8 @@ const kioskSteps: Step[] = [
       "First boot takes 60–90 seconds. Subsequent boots take 30–45 seconds.",
       "The AwareCam Kiosk setup screen will appear automatically.",
     ],
-    screenshot: "TV screen showing the AwareCam Kiosk setup screen — dark background with AwareCam logo centered, 'Welcome to AwareCam Kiosk' heading, and a text field labeled 'Enter Provisioning Code'.",
-    screenshotAlt: "AwareCam Kiosk first boot setup screen on TV",
+    screenshot: SCREENS.kioskLoading,
+    screenshotAlt: "AwareCam Kiosk first boot loading screen",
     warning: "Do not disconnect power during first boot. The device is writing configuration files. Interrupting this can corrupt the SD card.",
   },
   {
@@ -377,8 +381,8 @@ const kioskSteps: Step[] = [
       "The device connects to the AwareCam cloud and confirms pairing.",
       "You will see a green 'Device Paired Successfully' message.",
     ],
-    screenshot: "AwareCam Kiosk setup screen — provisioning code field filled with 'XKMT-72PQ3', 'Pair Device' button highlighted. Green success banner at top: 'Device Paired Successfully — Site: Main Warehouse'.",
-    screenshotAlt: "AwareCam Kiosk pairing success screen",
+    screenshot: SCREENS.kioskSetup,
+    screenshotAlt: "AwareCam Kiosk provisioning code entry screen",
     tip: "The code is case-insensitive. XKMT-72PQ3 and xkmt-72pq3 both work.",
     warning: "If pairing fails, check that the Ethernet cable is connected and the internet is working. The device needs internet access to pair.",
   },
@@ -392,7 +396,7 @@ const kioskSteps: Step[] = [
       "Click 'Set PIN'.",
       "This PIN is required every time the device restarts or the screen is locked.",
     ],
-    screenshot: "AwareCam Kiosk PIN setup screen — 4-digit number pad on screen, two PIN entry fields (Enter PIN / Confirm PIN), and a 'Set PIN' button.",
+    screenshot: SCREENS.kioskPin,
     screenshotAlt: "AwareCam Kiosk PIN setup screen",
     tip: "Choose a PIN that on-site staff can remember but is not obvious (avoid 1234 or 0000). Record it in your client's handover document.",
     warning: "If the PIN is forgotten, contact support@awarecam.com. A remote PIN reset can be sent from the admin dashboard.",

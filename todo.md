@@ -71,3 +71,9 @@
 - [x] Replace app.awarecam.com references throughout (was Base44)
 - [x] Rebuild Installation Guides as full A-to-Z product guide with real screenshots
 - [x] Cover: account creation, add site, add camera, draw zone/fence, select AI agents, setup email/SMS alerts, view alerts
+
+## Phase 13: Kiosk Screenshot & PDF Guides
+- [x] Render desktop-app/ui/setup.html and capture kiosk provisioning screen
+- [x] Upload kiosk screenshot to CDN and embed into Installation Guides
+- [x] Generate PDF of Kiosk Installation Guide
+- [x] Generate PDF of Windows Edge Installation Guide
