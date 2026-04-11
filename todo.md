@@ -57,3 +57,9 @@
 - [x] Direct RTSP (cloud-only) full install guide with images
 - [x] Troubleshooting section for each deployment type
 - [x] Fix nested anchor tag hydration error in PortalLayout
+
+## Phase 11: Logo Integration
+- [x] Extract AwareCam logo from awarecam.com
+- [x] Upload logo to CDN
+- [x] Add logo to portal sidebar, login page, and favicon
+- [x] Add logo to all markdown documentation files

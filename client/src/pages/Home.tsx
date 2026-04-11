@@ -33,9 +33,11 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-border px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-            <Shield className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc/awarecam_logo_full_20d05116.png"
+            alt="AwareCam"
+            className="w-10 h-10 object-contain"
+          />
           <div>
             <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               AwareCam

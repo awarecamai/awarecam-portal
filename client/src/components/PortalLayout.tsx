@@ -67,9 +67,11 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       <aside className="w-60 min-w-[240px] flex flex-col border-r border-border bg-[oklch(0.14_0.01_240)]">
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-border">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <Shield className="w-4 h-4 text-primary-foreground" />
-          </div>
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc/awarecam_logo_full_20d05116.png"
+            alt="AwareCam"
+            className="w-8 h-8 object-contain flex-shrink-0"
+          />
           <div>
             <div className="text-sm font-bold text-foreground" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               AwareCam
