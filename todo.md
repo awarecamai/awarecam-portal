@@ -43,3 +43,17 @@
 - [ ] Run vitest
 - [ ] Save checkpoint
 - [ ] Deliver live preview link
+
+## Phase 9: Document Library Seeding
+- [x] Read all 22 AwareCam markdown docs and extract content
+- [x] Write seed script to insert all documents into the DB
+- [x] Run seed script and verify documents appear in the portal
+
+## Phase 10: Installation Guides Rebuild
+- [x] Full Base44 account creation walkthrough (step-by-step with screenshots)
+- [x] Base44 onboarding flow (add site, add cameras, configure AI agents)
+- [x] Kiosk (Raspberry Pi) full install guide with images
+- [x] Windows Edge Device full install guide with images
+- [x] Direct RTSP (cloud-only) full install guide with images
+- [x] Troubleshooting section for each deployment type
+- [x] Fix nested anchor tag hydration error in PortalLayout

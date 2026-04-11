@@ -84,19 +84,19 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             const Icon = item.icon;
             const isActive = location === item.href || location.startsWith(item.href + "/");
             return (
-              <Link key={item.href} href={item.href}>
-                <a
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
-                    isActive
-                      ? "bg-primary/15 text-primary border border-primary/20"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  )}
-                >
-                  <Icon className={cn("w-4 h-4 flex-shrink-0", isActive && "text-primary")} />
-                  {t(item.key)}
-                  {isActive && <ChevronRight className="w-3 h-3 ml-auto text-primary" />}
-                </a>
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
+                  isActive
+                    ? "bg-primary/15 text-primary border border-primary/20"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                )}
+              >
+                <Icon className={cn("w-4 h-4 flex-shrink-0", isActive && "text-primary")} />
+                {t(item.key)}
+                {isActive && <ChevronRight className="w-3 h-3 ml-auto text-primary" />}
               </Link>
             );
           })}
