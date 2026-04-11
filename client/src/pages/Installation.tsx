@@ -11,6 +11,22 @@ import { cn } from "@/lib/utils";
 
 type GuideType = "account" | "kiosk" | "windows" | "rtsp";
 
+const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc";
+
+const SCREENS = {
+  login:              `${CDN}/01_login_683c4c48.webp`,
+  onboarding:         `${CDN}/02_onboarding_welcome_5a8d39cd.webp`,
+  orgSetup:           `${CDN}/03_organization_setup_5e8ba708.webp`,
+  dashboard:          `${CDN}/04_dashboard_9dc6bc53.png`,
+  cameraConnect:      `${CDN}/05_camera_connect_62938039.png`,
+  drawZones:          `${CDN}/06_draw_zones_00a83fab.png`,
+  aiAgents:           `${CDN}/07_ai_agents_bc7807da.png`,
+  configureAlerts:    `${CDN}/08_configure_alerts_a46cffa4.png`,
+  setupComplete:      `${CDN}/09_setup_complete_94b15a5d.png`,
+  eventsInbox:        `${CDN}/10_events_inbox_93ac8d67.png`,
+  liveView:           `${CDN}/11_live_view_1c5894c1.png`,
+};
+
 interface Step {
   number: number;
   title: string;
@@ -19,7 +35,7 @@ interface Step {
   warning?: string;
   tip?: string;
   code?: string;
-  screenshot?: string; // description of what the screenshot shows
+  screenshot?: string; // CDN URL of the screenshot image
   screenshotAlt?: string;
 }
 
@@ -36,7 +52,7 @@ const accountSteps: Step[] = [
       "Go to: app.awarecam.com",
       "You will see the AwareCam welcome screen with the logo and a 'Sign In to Get Started' button.",
     ],
-    screenshot: "AwareCam welcome screen — dark background with logo, 'Welcome to AwareCam', subtitle 'AI-Powered Video Intelligence Platform', and a blue 'Sign In to Get Started' button.",
+    screenshot: SCREENS.login,
     screenshotAlt: "AwareCam login screen",
     tip: "Bookmark app.awarecam.com for quick access. The platform works on all modern browsers.",
   },
@@ -53,7 +69,7 @@ const accountSteps: Step[] = [
       "Click 'Create Account'.",
       "Check your inbox for a verification email from noreply@awarecam.com.",
     ],
-    screenshot: "AwareCam OAuth portal — email and password fields, 'Create Account' and 'Sign In' buttons, language switcher in bottom-right corner.",
+    screenshot: SCREENS.login,
     screenshotAlt: "AwareCam account creation screen",
     tip: "Use your business email. This address will receive all billing, alerts, and support communications.",
     warning: "The verification link expires after 24 hours. If it expires, request a new one from the login screen.",
@@ -71,8 +87,8 @@ const accountSteps: Step[] = [
       "Step 6 — Primary Location: Enter your first site name, address, city, country, and time zone.",
       "Click 'Complete Setup' on the final step.",
     ],
-    screenshot: "Onboarding wizard — multi-step progress bar at top, current step showing industry selection cards (Cannabis, Construction, Education, Mining, Oil & Gas, Retail, Other) with icons.",
-    screenshotAlt: "AwareCam onboarding wizard — industry selection step",
+    screenshot: SCREENS.onboarding,
+    screenshotAlt: "AwareCam onboarding wizard — welcome step",
     tip: "If you are a reseller setting up an account for a client, use the client's business name as the Organization Name. You can manage multiple organizations from one account.",
   },
   {
@@ -85,7 +101,7 @@ const accountSteps: Step[] = [
       "The 'Recent Events' panel shows the latest AI-detected alerts with camera name, event type, and timestamp.",
       "The camera status breakdown shows Online, Offline, and Degraded counts.",
     ],
-    screenshot: "AwareCam main dashboard — dark sidebar on left with navigation icons, main area showing stat cards (Total Cameras, Active Cameras, Active Agents, Events Today), recent events feed on the right.",
+    screenshot: SCREENS.dashboard,
     screenshotAlt: "AwareCam main dashboard",
     tip: "The dashboard auto-refreshes every 30 seconds. All statistics are live.",
   },
@@ -119,7 +135,7 @@ const accountSteps: Step[] = [
       "Click 'Test Connection' — a green checkmark confirms the camera is reachable.",
       "Click 'Next' to proceed to zone drawing.",
     ],
-    screenshot: "Camera Setup Wizard Step 1 — modal with 5-step progress bar at top, fields for camera name, location dropdown, vendor selector, IP address, port, username, password, and a 'Test Connection' button. RTSP URL preview shown below the fields.",
+    screenshot: SCREENS.cameraConnect,
     screenshotAlt: "AwareCam add camera wizard — connection step",
     tip: "Use the substream (lower resolution) for AI analytics. It uses less bandwidth and is sufficient for all AI detection tasks.",
     warning: "You must know your camera's admin username and password. AwareCam cannot bypass or recover camera credentials.",
@@ -139,7 +155,7 @@ const accountSteps: Step[] = [
       "Zones are color-coded — each zone gets a distinct color automatically.",
       "Click 'Save Zones' when finished, or click 'Skip' to use full-frame detection.",
     ],
-    screenshot: "Camera Setup Wizard Step 2 — live camera video feed with a blue polygon drawn over a doorway area. Zone list on the right showing 'Front Entrance' with color swatch, edit and delete buttons. 'Add Zone' button at top.",
+    screenshot: SCREENS.drawZones,
     screenshotAlt: "AwareCam zone drawing interface — polygon drawn on camera feed",
     tip: "Drawing specific zones dramatically reduces false alarms. For example, a zone covering only the entrance door will not trigger alerts for movement in the parking lot.",
     warning: "Zones require a live camera stream. If the stream is not ready, the wizard will show a loading indicator — wait 30–60 seconds for the stream to initialize.",
@@ -159,7 +175,7 @@ const accountSteps: Step[] = [
       "Configure agent-specific settings: sensitivity, minimum loiter time, maximum occupancy count, etc.",
       "Click 'Next' when all desired agents are configured.",
     ],
-    screenshot: "Camera Setup Wizard Step 3 — list of AI agents with toggle switches. 'Person Detection' and 'Vehicle Detection' are enabled (blue toggles). Expanded config panel below 'Person Detection' showing zone selector and sensitivity slider.",
+    screenshot: SCREENS.aiAgents,
     screenshotAlt: "AwareCam AI agent selection step",
     tip: "Start with Person Detection and Fire/Smoke on all cameras. Add specialized agents (LPR, Loitering) after the client has used the system for a week and confirmed the basic setup is working.",
   },
@@ -177,7 +193,7 @@ const accountSteps: Step[] = [
       "You can add multiple email and SMS recipients per organization.",
       "Click 'Next' to complete the camera setup.",
     ],
-    screenshot: "Camera Setup Wizard Step 4 — alert severity dropdown set to 'Medium', Email Notifications toggle ON with email address shown, SMS Notifications toggle ON with phone number shown. 'Add Email Channel' and 'Add SMS Channel' inline forms visible.",
+    screenshot: SCREENS.configureAlerts,
     screenshotAlt: "AwareCam alert configuration step — email and SMS setup",
     tip: "Alert channels are shared across all cameras in your organization. You only need to add an email or phone number once — it will be available for all future cameras.",
     warning: "SMS alerts require a verified phone number. A test message is sent when you save the channel — confirm receipt before completing setup.",
@@ -193,7 +209,7 @@ const accountSteps: Step[] = [
       "Click 'View Camera' to open the camera detail page.",
       "Click 'Add Another Camera' to repeat the process for additional cameras.",
     ],
-    screenshot: "Camera Setup Wizard Step 5 — success screen with green checkmark, 'Camera Setup Complete!' heading, summary of what was configured (zones, agents, alerts), and two buttons: 'View Camera' and 'Add Another Camera'.",
+    screenshot: SCREENS.setupComplete,
     screenshotAlt: "AwareCam camera setup completion screen",
     tip: "It takes 30–60 seconds for the first AI alert to process after enabling agents. Walk in front of the camera to trigger a test Person Detection alert.",
   },
@@ -209,7 +225,7 @@ const accountSteps: Step[] = [
       "Active AI detections are shown as colored overlays on the live feed.",
       "Camera health status (green/yellow/red dot) is shown in the corner of each tile.",
     ],
-    screenshot: "AwareCam Live View page — 2×2 grid of camera feeds, each showing a live video stream with camera name, status dot, and AI detection overlay. Layout selector buttons in top-right.",
+    screenshot: SCREENS.liveView,
     screenshotAlt: "AwareCam live camera view — multi-camera grid",
     tip: "The Live View page is optimized for large monitors and TV displays. Use it as a dedicated monitoring screen in a control room or reception area.",
   },
@@ -228,7 +244,7 @@ const accountSteps: Step[] = [
       "Mark alerts as read individually or use 'Mark All as Read'.",
       "Select multiple alerts and use 'Delete Selected' to clear old events.",
     ],
-    screenshot: "AwareCam Alerts page — list of alert rows, each with a thumbnail, event type badge (e.g., 'Person Detected' in orange, 'Vehicle' in blue), camera name, severity indicator, and timestamp. Search bar and filter dropdowns at the top.",
+    screenshot: SCREENS.eventsInbox,
     screenshotAlt: "AwareCam alerts inbox — list of AI-generated events",
     tip: "Unread alerts are highlighted. The mobile app also shows a badge count for unread alerts. Encourage clients to review and clear alerts daily.",
   },
@@ -781,14 +797,19 @@ function StepCard({ step, isLast }: { step: Step; isLast: boolean }) {
 
         {expanded && (
           <div className="mt-3 space-y-3">
-            {/* Screenshot placeholder */}
+            {/* Screenshot */}
             {step.screenshot && (
-              <div className="rounded-lg border border-dashed border-border bg-secondary/30 p-3 flex items-start gap-3">
-                <Eye className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Screenshot</p>
-                  <p className="text-xs text-muted-foreground italic leading-relaxed">{step.screenshot}</p>
+              <div className="rounded-lg overflow-hidden border border-border bg-secondary/30">
+                <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-secondary/50">
+                  <Eye className="w-3.5 h-3.5 text-muted-foreground" />
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">App Screenshot</p>
                 </div>
+                <img
+                  src={step.screenshot}
+                  alt={step.screenshotAlt || "AwareCam app screenshot"}
+                  className="w-full object-contain max-h-80"
+                  loading="lazy"
+                />
               </div>
             )}
 
