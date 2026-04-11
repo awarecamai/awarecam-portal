@@ -77,3 +77,17 @@
 - [x] Upload kiosk screenshot to CDN and embed into Installation Guides
 - [x] Generate PDF of Kiosk Installation Guide
 - [x] Generate PDF of Windows Edge Installation Guide
+
+## Phase 14: Screenshot Fix & Guide Cleanup
+- [ ] Crop white space from all mockup screenshots and re-upload to CDN
+- [ ] Remove Mobile App step from the Full Product Guide
+- [ ] Remove Workflows/employee-related steps from the Full Product Guide
+- [ ] Update SCREENS map with new cropped CDN URLs
+
+## Phase 15: Kiosk Screenshots Fix & PDF Regeneration
+- [ ] Read all kiosk UI HTML files to understand all screens
+- [ ] Fix black screen on kiosk index/home screen
+- [ ] Capture all kiosk screens: home, camera search, camera list, live view, settings, setup, PIN
+- [ ] Upload new kiosk screenshots to CDN and update Installation.tsx
+- [ ] Regenerate Kiosk PDF with local logo (no broken image)
+- [ ] Regenerate Windows Edge PDF with local logo (no broken image)
