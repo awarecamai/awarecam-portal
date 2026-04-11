@@ -63,3 +63,11 @@
 - [x] Upload logo to CDN
 - [x] Add logo to portal sidebar, login page, and favicon
 - [x] Add logo to all markdown documentation files
+
+## Phase 12: Full Product Guide & Base44 Removal
+- [x] Visit app.awarecam.com and capture screenshots of all key screens
+- [x] Upload all screenshots to CDN
+- [x] Remove all Base44 references from portal code (Installation.tsx, seeder, docs)
+- [x] Replace app.awarecam.com references throughout (was Base44)
+- [x] Rebuild Installation Guides as full A-to-Z product guide with real screenshots
+- [x] Cover: account creation, add site, add camera, draw zone/fence, select AI agents, setup email/SMS alerts, view alerts
