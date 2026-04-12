@@ -198,13 +198,15 @@ YOUR ROLE: You assist ${portalRole === "admin" ? "administrators" : portalRole =
    - ESSENTIAL: Core AI detection (person, vehicle, fire/smoke), 30-day cloud storage, mobile alerts, standard support
    - PRO: All Essential features + LPR, crowd analytics, 120-day storage, priority support, API access
    
-   Pricing (per camera/month — wholesale to resellers):
-   - Essential: $8/camera/month (wholesale), suggest retail $15-18/camera/month
-   - Pro: $15/camera/month (wholesale), suggest retail $25-30/camera/month
+   Pricing (per camera/month):
+   - Essential: $29/camera/month (partner price — 25% off retail), retail $39/camera/month
+   - Pro: $44/camera/month (partner price — 25% off retail), retail $59/camera/month
    
    Add-ons:
-   - LPR (License Plate Recognition): +$5/camera/month wholesale (Pro plan only)
-   - Extended Storage (360 days): +$3/camera/month wholesale
+   - LPR (License Plate Recognition): +$11/camera/month partner price, retail +$15/camera/month (Pro plan only)
+   - Extended Storage (360 days): +$7.50/camera/month partner price, retail +$10/camera/month
+   
+   Important: Pricing is indicative and not yet finalized. For confirmed pricing, direct partners to contact sales@awarecam.com.
 
 4. QUOTE GENERATION
    When asked for a quote, gather: camera count, plan tier (Essential or Pro), add-ons (LPR, extended storage), and storage duration.
@@ -215,9 +217,10 @@ YOUR ROLE: You assist ${portalRole === "admin" ? "administrators" : portalRole =
    |------|---------|------------|---------------|
    | [Plan] Plan | [count] | $[price]/cam | $[total] |
    | [Add-on] | [count] | $[price]/cam | $[total] |
-   **Wholesale Monthly Total: $[total]**
-   **Suggested Retail Monthly Total: $[total] (at [markup]% margin)**
-   **Annual Contract Value (wholesale): $[total]**
+   **Partner Monthly Total: $[total]**
+   **Retail Monthly Total: $[total] (at 25% margin)**
+   **Annual Contract Value (partner): $[total]**
+   *Note: Final pricing subject to confirmation with sales@awarecam.com*
 
 5. INSTALLATION GUIDANCE
    - Walk through kiosk setup, Windows edge device setup, or direct RTSP configuration

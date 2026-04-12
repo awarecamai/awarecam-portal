@@ -14,7 +14,7 @@ const objections = [
   },
   {
     objection: "It's too expensive / we don't have the budget.",
-    response: "Consider the cost of a security incident — theft, liability, or a missed safety event — versus $8–15 per camera per month. AwareCam replaces the need for 24/7 human monitoring, which typically costs $1,500–3,000/month for a single guard. The ROI is often achieved within the first month.",
+    response: "Consider the cost of a security incident — theft, liability, or a missed safety event — versus $39/camera/month retail (or $29/camera/month at partner pricing). AwareCam replaces the need for 24/7 human monitoring, which typically costs $3,500–5,000/month for a single security guard when factoring in salary, benefits, and overhead. A 10-camera site pays for itself in the first month compared to staffed monitoring.",
     category: "Price",
   },
   {
@@ -116,7 +116,7 @@ const platformSlides = [
   { title: "The Problem", content: "Traditional security cameras are passive — they record, but they don't think. Security teams are overwhelmed reviewing hours of footage after incidents occur. False alarms from motion sensors waste time and resources. Meanwhile, real threats go undetected until it's too late." },
   { title: "The AwareCam Solution", content: "AwareCam transforms any existing IP camera into an intelligent AI sensor. Using YOLO11 computer vision running on edge devices, AwareCam detects real threats in real-time — persons, vehicles, fire, smoke, and license plates — and delivers instant mobile alerts to the right people." },
   { title: "How It Works", content: "1. Connect: AwareCam connects to any IP camera via RTSP — no hardware replacement needed.\n2. Process: AI runs locally on the edge device (Raspberry Pi or Intel N100 Mini-PC).\n3. Alert: Real-time alerts with images are sent to the mobile app and cloud dashboard.\n4. Review: 30–360 days of cloud-stored footage with AI-tagged events for fast review." },
-  { title: "Key Differentiators", content: "• Edge-first: AI runs locally, not in the cloud — faster, more private, works offline\n• Camera-agnostic: Works with any RTSP-compatible IP camera (Dahua, Hikvision, Reolink, etc.)\n• No rip-and-replace: Protect existing camera investments\n• Scalable: From 1 camera to 40+ cameras on a single device\n• Affordable: Starting at $8/camera/month wholesale" },
+  { title: "Key Differentiators", content: "\u2022 Edge-first: AI runs locally, not in the cloud — faster, more private, works offline\n\u2022 Camera-agnostic: Works with any RTSP-compatible IP camera (Dahua, Hikvision, Reolink, etc.)\n\u2022 No rip-and-replace: Protect existing camera investments\n\u2022 Scalable: From 1 camera to 40+ cameras on a single device\n\u2022 Affordable: Essential plan from $39/camera/month retail ($29 partner price) — vs. $3,500–5,000/month for a single security guard" },
   { title: "AI Agents Available", content: "Essential Plan: Person Detection, Vehicle Detection, Fire/Smoke Detection\nPro Plan adds: LPR (License Plate Recognition), Crowd Detection, Extended Storage (up to 360 days), API Access\n\nAll agents are configurable with custom detection zones, confidence thresholds, and alert schedules." },
   { title: "Deployment Options", content: "1. Kiosk (Raspberry Pi 4): Plug-and-play, up to 8 cameras, ideal for small sites\n2. Windows Edge Device (Intel N100): 30–40 cameras, ideal for large commercial sites\n3. Direct RTSP: Cloud-only, no local device, requires static IP — ideal for sites with existing infrastructure" },
 ];
