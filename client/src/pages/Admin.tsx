@@ -66,7 +66,7 @@ export default function Admin() {
 
   return (
     <PortalLayout>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -76,7 +76,7 @@ export default function Admin() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
             { label: "Total Users", value: usersQuery.data?.length || 0, icon: Users, color: "text-primary" },
             { label: "Resellers", value: usersQuery.data?.filter(u => (u as any).portalRole === "reseller").length || 0, icon: Shield, color: "text-blue-400" },
@@ -144,8 +144,8 @@ export default function Admin() {
             {usersQuery.isLoading ? (
               <div className="text-center py-12 text-muted-foreground text-sm">Loading users...</div>
             ) : (
-              <div className="rounded-xl border border-border overflow-hidden">
-                <table className="w-full">
+              <div className="rounded-xl border border-border overflow-x-auto">
+                <table className="w-full min-w-[600px]">
                   <thead>
                     <tr className="border-b border-border bg-secondary/50">
                       <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>
@@ -251,8 +251,8 @@ export default function Admin() {
             {activityQuery.isLoading ? (
               <div className="text-center py-12 text-muted-foreground text-sm">Loading activity...</div>
             ) : (
-              <div className="rounded-xl border border-border overflow-hidden">
-                <table className="w-full">
+              <div className="rounded-xl border border-border overflow-x-auto">
+                <table className="w-full min-w-[500px]">
                   <thead>
                     <tr className="border-b border-border bg-secondary/50">
                       <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>

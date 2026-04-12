@@ -76,7 +76,7 @@ export default function Dashboard() {
 
   return (
     <PortalLayout>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-2">
@@ -92,7 +92,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
@@ -118,7 +118,7 @@ export default function Dashboard() {
           <h2 className="text-lg font-semibold text-foreground mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             {t("dashboard.quickLinks")}
           </h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {visibleLinks.map((link) => {
               const Icon = link.icon;
               return (

@@ -8,12 +8,15 @@ import {
   Globe,
   LayoutDashboard,
   LogOut,
+  Menu,
   Monitor,
   Settings,
   Shield,
   Users,
   Wrench,
+  X,
 } from "lucide-react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "./ui/button";
 import {
@@ -46,6 +49,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const { user, logout } = useAuth();
   const { t, language, setLanguage, isRTL } = useLanguage();
   const [location] = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => { logout(); window.location.href = "/"; },
   });
@@ -63,8 +67,28 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
   return (
     <div className={cn("flex min-h-screen bg-background", isRTL && "font-[Arial_Hebrew,sans-serif]")}>
+      {/* Mobile top bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 border-b border-border bg-[oklch(0.14_0.01_240)]">
+        <div className="flex items-center gap-2">
+          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc/awarecam_logo_full_20d05116.png" alt="AwareCam" className="w-7 h-7 object-contain" />
+          <span className="text-sm font-bold text-foreground" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>AwareCam</span>
+        </div>
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg hover:bg-secondary transition-colors" aria-label="Toggle menu">
+          {mobileOpen ? <X className="w-5 h-5 text-foreground" /> : <Menu className="w-5 h-5 text-foreground" />}
+        </button>
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-40 bg-black/60" onClick={() => setMobileOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-60 min-w-[240px] flex flex-col border-r border-border bg-[oklch(0.14_0.01_240)]">
+      <aside className={cn(
+        "flex flex-col border-r border-border bg-[oklch(0.14_0.01_240)] transition-transform duration-200",
+        "fixed md:static inset-y-0 left-0 z-40 w-60 min-w-[240px]",
+        mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-border">
           <img
@@ -173,7 +197,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto md:ml-0 pt-14 md:pt-0">
         {children}
       </main>
     </div>

@@ -85,7 +85,7 @@ export default function Assistant() {
     <PortalLayout>
       <div className="flex h-screen flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-5 border-b border-border flex-shrink-0">
+        <div className="flex items-center justify-between px-4 md:px-8 py-4 md:py-5 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center">
               <Bot className="w-5 h-5 text-primary" />
@@ -107,7 +107,7 @@ export default function Assistant() {
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
             /* Welcome screen */
-            <div className="flex flex-col items-center justify-center h-full px-8 py-12">
+            <div className="flex flex-col items-center justify-center h-full px-4 md:px-8 py-8 md:py-12">
               <div className="w-16 h-16 rounded-2xl bg-primary/15 flex items-center justify-center mb-6">
                 <Bot className="w-8 h-8 text-primary" />
               </div>
@@ -144,7 +144,7 @@ export default function Assistant() {
             </div>
           ) : (
             /* Messages */
-            <div className="px-8 py-6 space-y-6">
+            <div className="px-4 md:px-8 py-4 md:py-6 space-y-6">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -199,7 +199,7 @@ export default function Assistant() {
         </div>
 
         {/* Input Area */}
-        <div className="px-8 py-4 border-t border-border flex-shrink-0">
+        <div className="px-4 md:px-8 py-4 border-t border-border flex-shrink-0">
           <div className="flex gap-3 items-end max-w-4xl mx-auto">
             <div className="flex-1 relative">
               <Textarea

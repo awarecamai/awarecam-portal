@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="border-b border-border px-8 py-4 flex items-center justify-between">
+      <header className="border-b border-border px-4 md:px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img
             src="https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc/awarecam_logo_full_20d05116.png"
@@ -53,7 +53,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 py-20">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-12 md:py-20">
         {/* Glow orb */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
@@ -64,7 +64,7 @@ export default function Home() {
             AI-Powered Video Intelligence Platform
           </div>
 
-          <h1 className="text-5xl font-bold text-foreground mb-6 leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             The AwareCam{" "}
             <span
               style={{
@@ -84,7 +84,7 @@ export default function Home() {
           </p>
 
           {/* Features */}
-          <div className="grid grid-cols-3 gap-4 mb-12 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 md:mb-12 text-left">
             {[
               { icon: BookOpen, title: "Document Library", desc: "Legal, setup guides, and technical references" },
               { icon: Zap, title: "AI Assistant", desc: "Instant answers, camera lookup, and custom quotes" },
@@ -115,7 +115,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-border px-8 py-4 flex items-center justify-between text-xs text-muted-foreground">
+      <footer className="border-t border-border px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
         <span>© 2025 AwareCam. All rights reserved.</span>
         <div className="flex items-center gap-4">
           <span>AwareCam Inc. (US) · AwareCam Ltd. (IL)</span>

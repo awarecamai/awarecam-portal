@@ -863,7 +863,7 @@ export default function Installation() {
         </div>
 
         {/* Deployment type selector */}
-        <div className="grid grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {guides.map((g) => {
             const GIcon = g.icon;
             return (
@@ -921,9 +921,9 @@ export default function Installation() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Steps column */}
-          <div className="col-span-2">
+          <div className="lg:col-span-2">
             <div className="p-6 rounded-xl border border-border bg-card">
               <div className="flex items-center gap-3 mb-6">
                 <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", guide.bg)}>

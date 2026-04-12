@@ -130,7 +130,7 @@ export default function Sales() {
 
   return (
     <PortalLayout>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -285,7 +285,7 @@ export default function Sales() {
                       <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                         <TrendingUp className="w-4 h-4 text-primary" /> Key Statistics & ROI
                       </h3>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {v.keyStats.map((stat, i) => (
                           <div key={i} className="p-3 rounded-lg bg-secondary text-xs text-muted-foreground leading-relaxed">
                             {stat}
