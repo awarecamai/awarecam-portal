@@ -1,6 +1,6 @@
 import { and, desc, eq, like, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { accessLogs, chatMessages, documents, users, InsertUser, InsertAccessLog, InsertChatMessage } from "../drizzle/schema";
+import { accessLogs, chatMessages, documents, users, passwordResetTokens, InsertUser, InsertAccessLog, InsertChatMessage } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -27,12 +27,12 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   const values: InsertUser = { openId: user.openId };
   const updateSet: Record<string, unknown> = {};
 
-  const textFields = ["name", "email", "loginMethod"] as const;
+  const textFields = ["name", "email", "loginMethod", "passwordHash", "googleId"] as const;
   for (const field of textFields) {
-    const value = user[field];
+    const value = (user as any)[field];
     if (value === undefined) continue;
     const normalized = value ?? null;
-    values[field] = normalized;
+    (values as any)[field] = normalized;
     updateSet[field] = normalized;
   }
 
@@ -56,6 +56,20 @@ export async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByGoogleId(googleId: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -89,6 +103,27 @@ export async function updateUserLanguage(userId: number, preferredLanguage: "en"
   const db = await getDb();
   if (!db) return;
   await db.update(users).set({ preferredLanguage }).where(eq(users.id, userId));
+}
+
+// ─── Password Reset Tokens ────────────────────────────────────────────────────
+
+export async function createPasswordResetToken(userId: number, token: string, expiresAt: Date) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(passwordResetTokens).values({ userId, token, expiresAt });
+}
+
+export async function getPasswordResetToken(token: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(passwordResetTokens).where(eq(passwordResetTokens.token, token)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function markPasswordResetTokenUsed(token: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(passwordResetTokens).set({ usedAt: new Date() }).where(eq(passwordResetTokens.token, token));
 }
 
 // ─── Documents ───────────────────────────────────────────────────────────────

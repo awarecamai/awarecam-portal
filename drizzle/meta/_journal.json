@@ -15,6 +15,13 @@
       "when": 1775936134109,
       "tag": "0001_dry_captain_america",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775981058899,
+      "tag": "0002_aberrant_gladiator",
+      "breakpoints": true
     }
   ]
 }

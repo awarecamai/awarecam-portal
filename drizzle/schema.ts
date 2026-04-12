@@ -5,7 +5,10 @@ export const users = mysqlTable("users", {
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  // Auth fields
+  passwordHash: varchar("passwordHash", { length: 255 }), // null for Google-only accounts
+  googleId: varchar("googleId", { length: 128 }),         // null for email/password accounts
+  loginMethod: varchar("loginMethod", { length: 64 }),    // "email", "google", "manus"
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   // AwareCam-specific portal role
   portalRole: mysqlEnum("portalRole", ["reseller", "integrator", "end_user", "admin"]).default("end_user").notNull(),
@@ -19,6 +22,17 @@ export const users = mysqlTable("users", {
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+
+export const passwordResetTokens = mysqlTable("password_reset_tokens", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  token: varchar("token", { length: 128 }).notNull().unique(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  usedAt: timestamp("usedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 
 export const documents = mysqlTable("documents", {
   id: int("id").autoincrement().primaryKey(),
@@ -46,11 +60,11 @@ export type InsertDocument = typeof documents.$inferInsert;
 export const accessLogs = mysqlTable("access_logs", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
-  action: varchar("action", { length: 64 }).notNull(), // e.g. "view_doc", "download_doc", "chat_message"
-  resourceType: varchar("resourceType", { length: 64 }), // e.g. "document", "guide", "chat"
+  action: varchar("action", { length: 64 }).notNull(),
+  resourceType: varchar("resourceType", { length: 64 }),
   resourceId: varchar("resourceId", { length: 255 }),
   resourceTitle: varchar("resourceTitle", { length: 255 }),
-  metadata: text("metadata"), // JSON string for extra context
+  metadata: text("metadata"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

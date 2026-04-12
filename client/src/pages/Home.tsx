@@ -1,9 +1,8 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { Shield, Eye, Zap, Lock, ArrowRight, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export default function Home() {
   const { isAuthenticated, loading } = useAuth();
@@ -46,9 +45,9 @@ export default function Home() {
           </div>
         </div>
         <Button asChild size="sm">
-          <a href={getLoginUrl()}>
+          <Link href="/login">
             Sign In <ArrowRight className="w-4 h-4 ml-1" />
-          </a>
+          </Link>
         </Button>
       </header>
 
@@ -102,10 +101,10 @@ export default function Home() {
 
           {/* CTA */}
           <Button asChild size="lg" className="gap-2 px-8">
-            <a href={getLoginUrl()}>
+            <Link href="/login">
               Access Partner Portal
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </Button>
 
           <p className="text-xs text-muted-foreground mt-4">
