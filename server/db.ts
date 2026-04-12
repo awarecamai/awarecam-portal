@@ -1,14 +1,30 @@
-import { and, desc, eq, like, or } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
-import { accessLogs, chatMessages, documents, users, passwordResetTokens, InsertUser, InsertAccessLog, InsertChatMessage } from "../drizzle/schema";
+import { and, desc, eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import {
+  accessLogs,
+  chatMessages,
+  documents,
+  InsertAccessLog,
+  InsertChatMessage,
+  InsertUser,
+  passwordResetTokens,
+  users,
+} from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-export async function getDb() {
+export function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const client = postgres(process.env.DATABASE_URL, {
+        ssl: "require",
+        max: 5,
+        idle_timeout: 20,
+        connect_timeout: 10,
+      });
+      _db = drizzle(client);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -21,7 +37,7 @@ export async function getDb() {
 
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
-  const db = await getDb();
+  const db = getDb();
   if (!db) { console.warn("[Database] Cannot upsert user: database not available"); return; }
 
   const values: InsertUser = { openId: user.openId };
@@ -49,79 +65,86 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     updateSet.portalRole = "admin";
   }
 
-  await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
+  // Always update updatedAt
+  updateSet.updatedAt = new Date();
+  values.updatedAt = new Date();
+
+  await db
+    .insert(users)
+    .values(values)
+    .onConflictDoUpdate({ target: users.openId, set: updateSet });
 }
 
 export async function getUserByOpenId(openId: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUserByEmail(email: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUserByGoogleId(googleId: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUserById(id: number) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUsers() {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return [];
   return await db.select().from(users).orderBy(desc(users.createdAt));
 }
 
 export async function updateUserRole(userId: number, portalRole: "reseller" | "integrator" | "end_user" | "admin") {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
   const roleMap = { admin: "admin" as const, reseller: "user" as const, integrator: "user" as const, end_user: "user" as const };
-  await db.update(users).set({ portalRole, role: roleMap[portalRole] }).where(eq(users.id, userId));
+  await db.update(users).set({ portalRole, role: roleMap[portalRole], updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function updateUserStatus(userId: number, isActive: boolean) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
-  await db.update(users).set({ isActive }).where(eq(users.id, userId));
+  await db.update(users).set({ isActive, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function updateUserLanguage(userId: number, preferredLanguage: "en" | "he") {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
-  await db.update(users).set({ preferredLanguage }).where(eq(users.id, userId));
+  await db.update(users).set({ preferredLanguage, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 // ─── Password Reset Tokens ────────────────────────────────────────────────────
 
 export async function createPasswordResetToken(userId: number, token: string, expiresAt: Date) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
   await db.insert(passwordResetTokens).values({ userId, token, expiresAt });
 }
 
 export async function getPasswordResetToken(token: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return undefined;
   const result = await db.select().from(passwordResetTokens).where(eq(passwordResetTokens.token, token)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function markPasswordResetTokenUsed(token: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
   await db.update(passwordResetTokens).set({ usedAt: new Date() }).where(eq(passwordResetTokens.token, token));
 }
@@ -132,7 +155,7 @@ export async function getDocuments(opts: {
   category?: string;
   portalRole?: string;
 }) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return [];
 
   let query = db.select().from(documents).$dynamic();
@@ -153,7 +176,7 @@ export async function getDocuments(opts: {
   // Filter by access role
   if (opts.portalRole) {
     return results.filter((doc) => {
-      const roles = doc.accessRoles.split(",").map((r) => r.trim());
+      const roles = doc.accessRoles.split(",").map((r: string) => r.trim());
       return roles.includes(opts.portalRole!);
     });
   }
@@ -162,28 +185,31 @@ export async function getDocuments(opts: {
 }
 
 export async function getDocumentById(id: number) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return undefined;
   const result = await db.select().from(documents).where(eq(documents.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function upsertDocument(doc: typeof documents.$inferInsert) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
-  await db.insert(documents).values(doc).onDuplicateKeyUpdate({ set: doc });
+  await db
+    .insert(documents)
+    .values(doc)
+    .onConflictDoUpdate({ target: documents.id, set: { ...doc, updatedAt: new Date() } });
 }
 
 // ─── Access Logs ─────────────────────────────────────────────────────────────
 
 export async function logAccess(entry: Omit<InsertAccessLog, "id" | "createdAt">) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
   await db.insert(accessLogs).values(entry);
 }
 
 export async function getAccessLogs(userId?: number, limit = 50) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return [];
   let query = db.select().from(accessLogs).$dynamic();
   if (userId) query = query.where(eq(accessLogs.userId, userId));
@@ -193,7 +219,7 @@ export async function getAccessLogs(userId?: number, limit = 50) {
 // ─── Chat Messages ────────────────────────────────────────────────────────────
 
 export async function getChatMessages(userId: number, sessionId: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return [];
   return await db
     .select()
@@ -203,15 +229,14 @@ export async function getChatMessages(userId: number, sessionId: string) {
 }
 
 export async function saveChatMessage(msg: Omit<InsertChatMessage, "id" | "createdAt">) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
   await db.insert(chatMessages).values(msg);
 }
 
 export async function clearChatSession(userId: number, sessionId: string) {
-  const db = await getDb();
+  const db = getDb();
   if (!db) return;
-  const { sql } = await import("drizzle-orm");
   await db.delete(chatMessages).where(
     and(eq(chatMessages.userId, userId), eq(chatMessages.sessionId, sessionId))
   );

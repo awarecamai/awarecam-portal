@@ -120,13 +120,12 @@ export default function Login() {
     <div className="min-h-screen bg-[#0a0f1e] flex flex-col items-center justify-center px-4">
       {/* Logo / brand */}
       <div className="mb-8 text-center">
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <span className="text-2xl font-bold text-white tracking-tight">AwareCam</span>
+        <div className="flex items-center justify-center mb-2">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc/awarecam_logo_full_8e2d3e8d.png"
+            alt="AwareCam"
+            className="h-12 object-contain"
+          />
         </div>
         <p className="text-blue-400 text-sm">Partner Portal</p>
       </div>

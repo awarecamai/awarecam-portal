@@ -1,83 +1,94 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
+import { boolean, integer, pgEnum, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
-export const users = mysqlTable("users", {
-  id: int("id").autoincrement().primaryKey(),
-  openId: varchar("openId", { length: 64 }).notNull().unique(),
+// ─── Enums ────────────────────────────────────────────────────────────────────
+export const roleEnum = pgEnum("role", ["user", "admin"]);
+export const portalRoleEnum = pgEnum("portal_role", ["reseller", "integrator", "end_user", "admin"]);
+export const preferredLanguageEnum = pgEnum("preferred_language", ["en", "he"]);
+export const categoryEnum = pgEnum("category", ["legal", "setup_guides", "sales_training", "technical_reference"]);
+export const fileTypeEnum = pgEnum("file_type", ["markdown", "pdf", "external"]);
+export const languageEnum = pgEnum("language", ["en", "he", "both"]);
+export const chatRoleEnum = pgEnum("chat_role", ["user", "assistant", "system"]);
+
+// ─── Tables ───────────────────────────────────────────────────────────────────
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  openId: varchar("open_id", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
   // Auth fields
-  passwordHash: varchar("passwordHash", { length: 255 }), // null for Google-only accounts
-  googleId: varchar("googleId", { length: 128 }),         // null for email/password accounts
-  loginMethod: varchar("loginMethod", { length: 64 }),    // "email", "google", "manus"
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  passwordHash: varchar("password_hash", { length: 255 }), // null for Google-only accounts
+  googleId: varchar("google_id", { length: 128 }),         // null for email/password accounts
+  loginMethod: varchar("login_method", { length: 64 }),    // "email", "google", "manus"
+  role: roleEnum("role").default("user").notNull(),
   // AwareCam-specific portal role
-  portalRole: mysqlEnum("portalRole", ["reseller", "integrator", "end_user", "admin"]).default("end_user").notNull(),
-  preferredLanguage: mysqlEnum("preferredLanguage", ["en", "he"]).default("en").notNull(),
-  isActive: boolean("isActive").default(true).notNull(),
+  portalRole: portalRoleEnum("portal_role").default("end_user").notNull(),
+  preferredLanguage: preferredLanguageEnum("preferred_language").default("en").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
   company: varchar("company", { length: 255 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-  lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  lastSignedIn: timestamp("last_signed_in").defaultNow().notNull(),
 });
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-export const passwordResetTokens = mysqlTable("password_reset_tokens", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull(),
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
   token: varchar("token", { length: 128 }).notNull().unique(),
-  expiresAt: timestamp("expiresAt").notNull(),
-  usedAt: timestamp("usedAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 
-export const documents = mysqlTable("documents", {
-  id: int("id").autoincrement().primaryKey(),
+export const documents = pgTable("documents", {
+  id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
-  titleHe: varchar("titleHe", { length: 255 }),
-  category: mysqlEnum("category", ["legal", "setup_guides", "sales_training", "technical_reference"]).notNull(),
-  fileType: mysqlEnum("fileType", ["markdown", "pdf", "external"]).notNull(),
-  language: mysqlEnum("language", ["en", "he", "both"]).default("en").notNull(),
+  titleHe: varchar("title_he", { length: 255 }),
+  category: categoryEnum("category").notNull(),
+  fileType: fileTypeEnum("file_type").notNull(),
+  language: languageEnum("language").default("en").notNull(),
   // For markdown: store content directly. For PDF/external: store URL.
-  contentEn: text("contentEn"),
-  contentHe: text("contentHe"),
-  fileUrlEn: varchar("fileUrlEn", { length: 1024 }),
-  fileUrlHe: varchar("fileUrlHe", { length: 1024 }),
+  contentEn: text("content_en"),
+  contentHe: text("content_he"),
+  fileUrlEn: varchar("file_url_en", { length: 1024 }),
+  fileUrlHe: varchar("file_url_he", { length: 1024 }),
   // Which roles can access this document
-  accessRoles: varchar("accessRoles", { length: 255 }).default("reseller,integrator,end_user,admin").notNull(),
-  sortOrder: int("sortOrder").default(0).notNull(),
-  isPublished: boolean("isPublished").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  accessRoles: varchar("access_roles", { length: 255 }).default("reseller,integrator,end_user,admin").notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isPublished: boolean("is_published").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type Document = typeof documents.$inferSelect;
 export type InsertDocument = typeof documents.$inferInsert;
 
-export const accessLogs = mysqlTable("access_logs", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull(),
+export const accessLogs = pgTable("access_logs", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
   action: varchar("action", { length: 64 }).notNull(),
-  resourceType: varchar("resourceType", { length: 64 }),
-  resourceId: varchar("resourceId", { length: 255 }),
-  resourceTitle: varchar("resourceTitle", { length: 255 }),
+  resourceType: varchar("resource_type", { length: 64 }),
+  resourceId: varchar("resource_id", { length: 255 }),
+  resourceTitle: varchar("resource_title", { length: 255 }),
   metadata: text("metadata"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export type AccessLog = typeof accessLogs.$inferSelect;
 export type InsertAccessLog = typeof accessLogs.$inferInsert;
 
-export const chatMessages = mysqlTable("chat_messages", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull(),
-  sessionId: varchar("sessionId", { length: 64 }).notNull(),
-  role: mysqlEnum("role", ["user", "assistant", "system"]).notNull(),
+export const chatMessages = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  sessionId: varchar("session_id", { length: 64 }).notNull(),
+  role: chatRoleEnum("role").notNull(),
   content: text("content").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export type ChatMessage = typeof chatMessages.$inferSelect;

@@ -245,4 +245,28 @@ export function registerCustomAuthRoutes(app: Express) {
       res.status(500).json({ error: "Google sign-in failed" });
     }
   });
+
+  // ── Admin seed (one-time bootstrap) ─────────────────────────────────────
+  // Promotes a user to admin role by email + a shared secret token.
+  // Only works when ADMIN_SEED_TOKEN env var is set on the server.
+  app.post("/api/auth/seed-admin", async (req: Request, res: Response) => {
+    try {
+      const { email, token } = req.body as { email?: string; token?: string };
+      const seedToken = process.env.ADMIN_SEED_TOKEN;
+      if (!seedToken || !token || token !== seedToken) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+      }
+      const user = await db.getUserByEmail((email || "").toLowerCase().trim());
+      if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+      await db.updateUserRole(user.id, "admin");
+      res.json({ success: true, message: `User ${email} promoted to admin` });
+    } catch (err) {
+      console.error("[Auth] Seed admin failed:", err);
+      res.status(500).json({ error: "Failed to promote user" });
+    }
+  });
 }
