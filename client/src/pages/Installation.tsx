@@ -773,20 +773,24 @@ function StepCard({ step, isLast }: { step: Step; isLast: boolean }) {
         {expanded && (
           <div className="mt-3 space-y-3">
             {/* Screenshot */}
-            {step.screenshot && (
-              <div className="rounded-lg overflow-hidden border border-border bg-secondary/30">
-                <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-secondary/50">
-                  <Eye className="w-3.5 h-3.5 text-muted-foreground" />
-                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">App Screenshot</p>
+            {step.screenshot && (() => {
+              const isUrl = step.screenshot.startsWith("http") || step.screenshot.startsWith("/");
+              if (!isUrl) return null;
+              return (
+                <div className="rounded-lg overflow-hidden border border-border bg-secondary/30">
+                  <div className="flex items-center gap-2 px-3 py-1.5 border-b border-border bg-secondary/50">
+                    <Eye className="w-3.5 h-3.5 text-muted-foreground" />
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">App Screenshot</p>
+                  </div>
+                  <img
+                    src={step.screenshot}
+                    alt={step.screenshotAlt || "AwareCam app screenshot"}
+                    className="w-full object-contain max-h-80"
+                    loading="lazy"
+                  />
                 </div>
-                <img
-                  src={step.screenshot}
-                  alt={step.screenshotAlt || "AwareCam app screenshot"}
-                  className="w-full object-contain max-h-80"
-                  loading="lazy"
-                />
-              </div>
-            )}
+              );
+            })()}
 
             {/* Details list */}
             {step.details && (
