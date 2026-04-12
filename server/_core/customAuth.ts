@@ -251,19 +251,40 @@ export function registerCustomAuthRoutes(app: Express) {
   // Only works when ADMIN_SEED_TOKEN env var is set on the server.
   app.post("/api/auth/seed-admin", async (req: Request, res: Response) => {
     try {
-      const { email, token } = req.body as { email?: string; token?: string };
+      const { email, token, password } = req.body as { email?: string; token?: string; password?: string };
       const seedToken = process.env.ADMIN_SEED_TOKEN;
       if (!seedToken || !token || token !== seedToken) {
         res.status(403).json({ error: "Forbidden" });
         return;
       }
-      const user = await db.getUserByEmail((email || "").toLowerCase().trim());
+      const normalizedEmail = (email || "").toLowerCase().trim();
+      let user = await db.getUserByEmail(normalizedEmail);
       if (!user) {
-        res.status(404).json({ error: "User not found" });
+        // Create the user if they don't exist
+        const passwordHash = password ? await bcrypt.hash(password, 10) : null;
+        const openId = `seed-admin-${nanoid(8)}`;
+        await db.upsertUser({
+          openId,
+          name: normalizedEmail.split("@")[0],
+          email: normalizedEmail,
+          loginMethod: "email",
+          passwordHash: passwordHash ?? undefined,
+          role: "admin",
+          portalRole: "admin",
+          isActive: true,
+        });
+        user = await db.getUserByEmail(normalizedEmail);
+      } else if (password) {
+        // Update password hash if provided
+        const passwordHash = await bcrypt.hash(password, 10);
+        await db.updateUserPassword(user.id, passwordHash);
+      }
+      if (!user) {
+        res.status(500).json({ error: "Failed to create/find user" });
         return;
       }
       await db.updateUserRole(user.id, "admin");
-      res.json({ success: true, message: `User ${email} promoted to admin` });
+      res.json({ success: true, message: `User ${email} is now admin` });
     } catch (err) {
       console.error("[Auth] Seed admin failed:", err);
       res.status(500).json({ error: "Failed to promote user" });

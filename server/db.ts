@@ -18,8 +18,11 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      const client = postgres(process.env.DATABASE_URL, {
-        ssl: "require",
+      const dbUrl = process.env.DATABASE_URL;
+      // Use SSL only for remote databases (not local postgres)
+      const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1') || dbUrl.includes('::1');
+      const client = postgres(dbUrl, {
+        ssl: isLocal ? false : "require",
         max: 5,
         idle_timeout: 20,
         connect_timeout: 10,
@@ -114,6 +117,12 @@ export async function updateUserRole(userId: number, portalRole: "reseller" | "i
   if (!db) return;
   const roleMap = { admin: "admin" as const, reseller: "user" as const, integrator: "user" as const, end_user: "user" as const };
   await db.update(users).set({ portalRole, role: roleMap[portalRole], updatedAt: new Date() }).where(eq(users.id, userId));
+}
+
+export async function updateUserPassword(userId: number, passwordHash: string) {
+  const db = getDb();
+  if (!db) return;
+  await db.update(users).set({ passwordHash, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function updateUserStatus(userId: number, isActive: boolean) {
