@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PortalLayout from "@/components/PortalLayout";
-import { TrendingUp, Shield, Building2, GraduationCap, Leaf, Flame, HardHat, ChevronDown, ChevronUp, CheckCircle, XCircle, Monitor, BookOpen } from "lucide-react";
+import { TrendingUp, Shield, Building2, GraduationCap, Flame, HardHat, ChevronDown, ChevronUp, CheckCircle, XCircle, Monitor, BookOpen, Warehouse, Factory, Heart, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SalesTab = "objections" | "brochures" | "platform";
@@ -51,16 +51,16 @@ const objections = [
 
 const verticals = [
   {
-    key: "cannabis",
-    label: "Cannabis",
-    icon: Leaf,
-    color: "text-green-400",
-    bg: "bg-green-500/10",
-    border: "border-green-500/20",
-    painPoints: ["Regulatory compliance (state-mandated 24/7 recording)", "Theft of product and cash", "Employee monitoring", "Visitor access control"],
-    aiAgents: ["Person Detection", "LPR (delivery vehicle tracking)", "Fire/Smoke Detection", "Crowd Detection (dispensary)"],
-    pitch: "Cannabis operations face strict state regulations requiring 24/7 video surveillance with cloud backup. AwareCam's automated compliance recording, LPR for delivery tracking, and real-time alerts eliminate the need for dedicated security staff while meeting all regulatory requirements.",
-    keyStats: ["Average cannabis theft loss: $50K–$200K/year", "State compliance fines for missing footage: $5K–$50K per incident", "AwareCam ROI for cannabis: typically < 30 days"],
+    key: "retail",
+    label: "Retail",
+    icon: ShoppingCart,
+    color: "text-pink-400",
+    bg: "bg-pink-500/10",
+    border: "border-pink-500/20",
+    painPoints: ["Shoplifting and organized retail crime ($100B+ annual US losses)", "Employee theft and internal shrinkage", "Slip-and-fall liability and false claims", "After-hours break-ins and smash-and-grab"],
+    aiAgents: ["Person Detection (loitering, after-hours)", "Crowd Detection (queue management)", "LPR (parking lot monitoring)", "Fire/Smoke Detection"],
+    pitch: "Retail environments face constant shrinkage from shoplifting, employee theft, and organized retail crime. AwareCam's AI-powered person detection and crowd analytics provide real-time alerts for loitering and after-hours intrusion, while cloud-stored footage with AI-tagged events dramatically reduces investigation time and supports loss prevention teams.",
+    keyStats: ["US retail shrinkage: $112B annually", "Stores with AI monitoring reduce shrinkage by 30–50%", "Average shoplifting incident: $461 in merchandise loss"],
   },
   {
     key: "construction",
@@ -87,24 +87,48 @@ const verticals = [
     keyStats: ["K-12 security spending: $3.1B annually", "Average cost of a school security incident: $500K+", "Campuses with AI monitoring respond 4x faster to incidents"],
   },
   {
-    key: "mining",
-    label: "Mining",
-    icon: HardHat,
+    key: "warehouse",
+    label: "Warehousing",
+    icon: Warehouse,
     color: "text-yellow-400",
     bg: "bg-yellow-500/10",
     border: "border-yellow-500/20",
-    painPoints: ["Worker safety in hazardous zones", "Equipment monitoring (conveyor, heavy machinery)", "Perimeter security at remote sites", "Regulatory compliance documentation"],
-    aiAgents: ["Person Detection (exclusion zone monitoring)", "Vehicle Detection (heavy equipment)", "Fire/Smoke Detection (critical)", "LPR (site access)"],
-    pitch: "Mining operations involve extreme safety risks and remote locations. AwareCam's edge-first architecture works reliably with limited connectivity. Real-time fire and smoke detection in processing facilities, exclusion zone monitoring around heavy machinery, and automated compliance recording protect workers and assets.",
-    keyStats: ["Mining fatalities cost industry $1M+ per incident in liability", "Fire incidents in mining: avg. $5M in damages", "Remote site monitoring reduces security staff needs by 60%"],
+    painPoints: ["Cargo theft and inventory shrinkage", "Forklift and worker safety in high-traffic zones", "Unauthorized access to restricted areas", "After-hours break-ins and loading dock security"],
+    aiAgents: ["Person Detection (restricted zone access)", "Vehicle Detection (forklift and truck tracking)", "LPR (delivery vehicle verification)", "Fire/Smoke Detection"],
+    pitch: "Warehouses and distribution centers handle high-value inventory around the clock. AwareCam's AI monitors loading docks, restricted zones, and perimeters 24/7 — detecting unauthorized access, verifying delivery vehicles via LPR, and alerting safety teams when workers enter hazardous forklift zones. Cloud-stored footage with AI-tagged events accelerates incident investigations.",
+    keyStats: ["Cargo theft costs US businesses $15–35B annually", "Warehouses with AI monitoring reduce theft incidents by 40–60%", "Average cargo theft per incident: $200K+"],
+  },
+  {
+    key: "manufacturing",
+    label: "Manufacturing",
+    icon: Factory,
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+    border: "border-orange-500/20",
+    painPoints: ["Worker safety compliance (PPE, exclusion zones)", "Equipment theft and vandalism", "Fire and smoke risk in production areas", "Shift change and access control monitoring"],
+    aiAgents: ["Person Detection (exclusion zone & PPE monitoring)", "Fire/Smoke Detection (production floor)", "Vehicle Detection (loading areas)", "LPR (authorized vendor access)"],
+    pitch: "Manufacturing facilities face strict OSHA safety requirements and significant fire risk from machinery and chemicals. AwareCam's real-time PPE compliance monitoring, exclusion zone alerts, and fire/smoke detection protect workers and assets. Automated compliance recording simplifies OSHA documentation and incident reporting.",
+    keyStats: ["OSHA violations cost manufacturers avg. $15K per citation", "Manufacturing fires cause $1B+ in property damage annually", "AI safety monitoring reduces workplace incidents by 35%"],
+  },
+  {
+    key: "healthcare",
+    label: "Healthcare",
+    icon: Heart,
+    color: "text-red-400",
+    bg: "bg-red-500/10",
+    border: "border-red-500/20",
+    painPoints: ["Patient and staff safety in sensitive areas", "Unauthorized access to medication storage and labs", "Parking lot and entrance security", "Liability documentation for incidents and falls"],
+    aiAgents: ["Person Detection (restricted area access)", "Crowd Detection (waiting room management)", "LPR (parking and ambulance bay)", "Fire/Smoke Detection"],
+    pitch: "Hospitals, clinics, and care facilities must balance open access with strict security for patients, staff, and controlled substances. AwareCam's AI monitors restricted areas like pharmacies and server rooms, detects unauthorized access after hours, and provides cloud-stored footage for liability protection. HIPAA-compliant edge processing ensures patient privacy.",
+    keyStats: ["Healthcare workplace violence costs $4.6B annually in the US", "Medication theft from facilities: $75M+ per year", "AI monitoring reduces security response time by 60%"],
   },
   {
     key: "oil_gas",
     label: "Oil & Gas",
     icon: Flame,
-    color: "text-red-400",
-    bg: "bg-red-500/10",
-    border: "border-red-500/20",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/20",
     painPoints: ["Fire and gas leak detection (critical safety)", "Pipeline and perimeter security", "Remote facility monitoring", "Regulatory compliance (EPA, OSHA)"],
     aiAgents: ["Fire/Smoke Detection (highest priority)", "Person Detection (exclusion zones)", "Vehicle Detection (tanker tracking)", "LPR (authorized access)"],
     pitch: "Oil and gas facilities represent some of the highest-risk environments in industry. AwareCam's fire and smoke detection AI provides early warning seconds before traditional sensors trigger, potentially preventing catastrophic events. Remote monitoring of pipelines and wellheads with cellular-connected edge devices eliminates the need for on-site security personnel.",

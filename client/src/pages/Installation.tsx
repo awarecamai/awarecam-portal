@@ -89,7 +89,7 @@ const accountSteps: Step[] = [
     description: "After your first login, AwareCam guides you through a short setup wizard to configure your organization.",
     details: [
       "Step 1 — Welcome & Plan: Review your selected plan and trial details.",
-      "Step 2 — Business Profile: Enter your Organization Name, select your Industry (Cannabis, Construction, Education, Mining, Oil & Gas, Retail, or Other), and choose your country.",
+      "Step 2 — Business Profile: Enter your Organization Name, select your Industry (Construction, Warehousing, Manufacturing, Healthcare, Retail, Education, Oil & Gas, or Other), and choose your country.",
       "Step 3 — Business Type: Select whether you are an Owner/Operator, Reseller/Integrator, or Security Company.",
       "Step 4 — Goals: Choose your primary security goals (perimeter protection, people counting, vehicle monitoring, etc.).",
       "Step 5 — Organization Size: Select the number of locations and cameras you manage.",
