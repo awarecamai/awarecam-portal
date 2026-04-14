@@ -91,3 +91,11 @@
 - [ ] Upload new kiosk screenshots to CDN and update Installation.tsx
 - [ ] Regenerate Kiosk PDF with local logo (no broken image)
 - [ ] Regenerate Windows Edge PDF with local logo (no broken image)
+
+## Phase 16: Industry Verticals & Sales Page Enhancements
+- [x] Add Government/Municipal industry vertical (EN+HE)
+- [x] Add Houses of Worship (Synagogues, Schools, Religious Centers) industry vertical (EN+HE)
+- [x] Add Download Brochure button per industry with PDF generation (EN+HE)
+- [x] Update platform pricing slide with current pricing and plan tiers (EN+HE)
+- [x] Add all new translation keys to LanguageContext for EN and HE
+- [x] Update objections, brochure labels, and platform slide text to use translation keys (EN+HE)
