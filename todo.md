@@ -99,3 +99,18 @@
 - [x] Update platform pricing slide with current pricing and plan tiers (EN+HE)
 - [x] Add all new translation keys to LanguageContext for EN and HE
 - [x] Update objections, brochure labels, and platform slide text to use translation keys (EN+HE)
+
+## Phase 17: Custom Email/Password Authentication
+
+- [x] Update DB schema — add password_hash, reset_token, reset_token_expires, remove oauth fields
+- [x] Build login procedure (email + password, bcrypt verify, JWT session)
+- [x] Build forgot password procedure (generate reset token, send via Resend)
+- [x] Build reset password procedure (validate token, update hash)
+- [x] Build admin user management procedures (create, list, update, delete users)
+- [x] Build custom login page (replace Manus OAuth login)
+- [x] Build forgot password page
+- [x] Build reset password page
+- [x] Build admin user management panel
+- [x] Seed initial admin account
+- [x] Remove all Manus OAuth references from frontend and backend
+- [x] Test full auth flow end-to-end

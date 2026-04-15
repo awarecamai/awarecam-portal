@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import {
   accessLogs,
   chatMessages,
@@ -13,25 +13,43 @@ import {
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
-let _db: ReturnType<typeof drizzle> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _db: any = null;
+let _dbInitPromise: Promise<void> | null = null;
 
-export function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
-    try {
-      const dbUrl = process.env.DATABASE_URL;
-      // Use SSL only for remote databases (not local postgres)
-      const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1') || dbUrl.includes('::1');
-      const client = postgres(dbUrl, {
-        ssl: isLocal ? false : "require",
-        max: 5,
-        idle_timeout: 20,
-        connect_timeout: 10,
-      });
-      _db = drizzle(client);
-    } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
-      _db = null;
-    }
+async function initDb() {
+  if (_db) return;
+  const dbUrl = process.env.DATABASE_URL;
+  if (!dbUrl) return;
+  try {
+    const url = new URL(dbUrl);
+    const isLocal = url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '::1';
+    const pool = mysql.createPool({
+      host: url.hostname,
+      port: parseInt(url.port) || 4000,
+      user: url.username,
+      password: url.password,
+      database: url.pathname.slice(1).split('?')[0],
+      ssl: isLocal ? undefined : { rejectUnauthorized: true },
+      waitForConnections: true,
+      connectionLimit: 5,
+      connectTimeout: 10000,
+    });
+    _db = drizzle(pool);
+  } catch (error) {
+    console.warn("[Database] Failed to connect:", error);
+    _db = null;
+  }
+}
+
+// Initialize on first import
+_dbInitPromise = initDb();
+
+export async function getDb() {
+  if (!_db && _dbInitPromise) await _dbInitPromise;
+  if (!_db) {
+    // Retry once
+    await initDb();
   }
   return _db;
 }
@@ -40,7 +58,7 @@ export function getDb() {
 
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
-  const db = getDb();
+  const db = await getDb();
   if (!db) { console.warn("[Database] Cannot upsert user: database not available"); return; }
 
   const values: InsertUser = { openId: user.openId };
@@ -75,64 +93,64 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   await db
     .insert(users)
     .values(values)
-    .onConflictDoUpdate({ target: users.openId, set: updateSet });
+    .onDuplicateKeyUpdate({ set: updateSet });
 }
 
 export async function getUserByOpenId(openId: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUserByEmail(email: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUserByGoogleId(googleId: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUserById(id: number) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getUsers() {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return [];
   return await db.select().from(users).orderBy(desc(users.createdAt));
 }
 
 export async function updateUserRole(userId: number, portalRole: "reseller" | "integrator" | "end_user" | "admin") {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   const roleMap = { admin: "admin" as const, reseller: "user" as const, integrator: "user" as const, end_user: "user" as const };
   await db.update(users).set({ portalRole, role: roleMap[portalRole], updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function updateUserPassword(userId: number, passwordHash: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.update(users).set({ passwordHash, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function updateUserStatus(userId: number, isActive: boolean) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.update(users).set({ isActive, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function updateUserLanguage(userId: number, preferredLanguage: "en" | "he") {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.update(users).set({ preferredLanguage, updatedAt: new Date() }).where(eq(users.id, userId));
 }
@@ -140,20 +158,20 @@ export async function updateUserLanguage(userId: number, preferredLanguage: "en"
 // ─── Password Reset Tokens ────────────────────────────────────────────────────
 
 export async function createPasswordResetToken(userId: number, token: string, expiresAt: Date) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.insert(passwordResetTokens).values({ userId, token, expiresAt });
 }
 
 export async function getPasswordResetToken(token: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(passwordResetTokens).where(eq(passwordResetTokens.token, token)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function markPasswordResetTokenUsed(token: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.update(passwordResetTokens).set({ usedAt: new Date() }).where(eq(passwordResetTokens.token, token));
 }
@@ -164,7 +182,7 @@ export async function getDocuments(opts: {
   category?: string;
   portalRole?: string;
 }) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return [];
 
   let query = db.select().from(documents).$dynamic();
@@ -184,7 +202,7 @@ export async function getDocuments(opts: {
 
   // Filter by access role
   if (opts.portalRole) {
-    return results.filter((doc) => {
+    return results.filter((doc: { accessRoles: string }) => {
       const roles = doc.accessRoles.split(",").map((r: string) => r.trim());
       return roles.includes(opts.portalRole!);
     });
@@ -194,31 +212,31 @@ export async function getDocuments(opts: {
 }
 
 export async function getDocumentById(id: number) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return undefined;
   const result = await db.select().from(documents).where(eq(documents.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function upsertDocument(doc: typeof documents.$inferInsert) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db
     .insert(documents)
     .values(doc)
-    .onConflictDoUpdate({ target: documents.id, set: { ...doc, updatedAt: new Date() } });
+    .onDuplicateKeyUpdate({ set: { ...doc, updatedAt: new Date() } });
 }
 
 // ─── Access Logs ─────────────────────────────────────────────────────────────
 
 export async function logAccess(entry: Omit<InsertAccessLog, "id" | "createdAt">) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.insert(accessLogs).values(entry);
 }
 
 export async function getAccessLogs(userId?: number, limit = 50) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return [];
   let query = db.select().from(accessLogs).$dynamic();
   if (userId) query = query.where(eq(accessLogs.userId, userId));
@@ -228,7 +246,7 @@ export async function getAccessLogs(userId?: number, limit = 50) {
 // ─── Chat Messages ────────────────────────────────────────────────────────────
 
 export async function getChatMessages(userId: number, sessionId: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return [];
   return await db
     .select()
@@ -238,13 +256,13 @@ export async function getChatMessages(userId: number, sessionId: string) {
 }
 
 export async function saveChatMessage(msg: Omit<InsertChatMessage, "id" | "createdAt">) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.insert(chatMessages).values(msg);
 }
 
 export async function clearChatSession(userId: number, sessionId: string) {
-  const db = getDb();
+  const db = await getDb();
   if (!db) return;
   await db.delete(chatMessages).where(
     and(eq(chatMessages.userId, userId), eq(chatMessages.sessionId, sessionId))

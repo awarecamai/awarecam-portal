@@ -1,69 +1,30 @@
 /**
- * Custom authentication routes:
- *  - POST /api/auth/register    — email + password registration
- *  - POST /api/auth/login       — email + password login
- *  - GET  /api/auth/google      — redirect to Google OAuth
- *  - GET  /api/auth/google/callback — Google OAuth callback
+ * AwareCam Custom Authentication Routes
  *
- * Sessions are issued as JWT cookies identical to the existing Manus flow,
- * so all existing tRPC procedures and useAuth() hooks work without changes.
+ * POST /api/auth/login           — email + password login
+ * POST /api/auth/logout          — clear session cookie
+ * POST /api/auth/forgot-password — send password reset email via Resend
+ * POST /api/auth/reset-password  — validate token + set new password
+ * POST /api/auth/seed-admin      — one-time bootstrap: create first admin account
+ *
+ * Admin-only user management is handled via tRPC procedures in routers.ts.
+ * No self-registration. No Google/Manus OAuth.
  */
 
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import bcrypt from "bcryptjs";
 import type { Express, Request, Response } from "express";
 import { nanoid } from "nanoid";
-import { ENV } from "./env";
+import { Resend } from "resend";
 import { getSessionCookieOptions } from "./cookies";
 import { sdk } from "./sdk";
 import * as db from "../db";
 
-// ─── Google OAuth via passport-google-oauth20 ────────────────────────────────
+const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM_EMAIL = "AwareCam <noreply@awarecam.com>";
+const RESET_TOKEN_EXPIRES_MS = 60 * 60 * 1000; // 1 hour
 
-async function getGoogleOAuthUrl(redirectBase: string): Promise<string> {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const redirectUri = `${redirectBase}/api/auth/google/callback`;
-  const scope = encodeURIComponent("openid email profile");
-  const state = Buffer.from(redirectBase).toString("base64");
-  return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${scope}&state=${state}&access_type=offline&prompt=select_account`;
-}
-
-async function exchangeGoogleCode(code: string, redirectUri: string) {
-  const clientId = process.env.GOOGLE_CLIENT_ID!;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
-
-  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      code,
-      client_id: clientId,
-      client_secret: clientSecret,
-      redirect_uri: redirectUri,
-      grant_type: "authorization_code",
-    }),
-  });
-
-  if (!tokenRes.ok) {
-    const err = await tokenRes.text();
-    throw new Error(`Google token exchange failed: ${err}`);
-  }
-
-  const tokens = await tokenRes.json() as { access_token: string; id_token: string };
-
-  // Decode id_token to get user info (no signature verification needed — we just exchanged the code)
-  const [, payloadB64] = tokens.id_token.split(".");
-  const payload = JSON.parse(Buffer.from(payloadB64, "base64url").toString("utf8")) as {
-    sub: string;
-    email: string;
-    name: string;
-    picture?: string;
-  };
-
-  return payload;
-}
-
-// ─── Session helpers ──────────────────────────────────────────────────────────
+// ─── Session helper ───────────────────────────────────────────────────────────
 
 async function issueSession(req: Request, res: Response, openId: string, name: string) {
   const sessionToken = await sdk.createSessionToken(openId, { name, expiresInMs: ONE_YEAR_MS });
@@ -75,53 +36,13 @@ async function issueSession(req: Request, res: Response, openId: string, name: s
 
 export function registerCustomAuthRoutes(app: Express) {
 
-  // ── Register (email + password) ──────────────────────────────────────────
-  app.post("/api/auth/register", async (req: Request, res: Response) => {
-    try {
-      const { email, password, name } = req.body as { email?: string; password?: string; name?: string };
-
-      if (!email || !password || !name) {
-        res.status(400).json({ error: "name, email, and password are required" });
-        return;
-      }
-      if (password.length < 8) {
-        res.status(400).json({ error: "Password must be at least 8 characters" });
-        return;
-      }
-
-      const existing = await db.getUserByEmail(email.toLowerCase().trim());
-      if (existing) {
-        res.status(409).json({ error: "An account with this email already exists" });
-        return;
-      }
-
-      const passwordHash = await bcrypt.hash(password, 12);
-      const openId = `email_${nanoid(24)}`;
-
-      await db.upsertUser({
-        openId,
-        name: name.trim(),
-        email: email.toLowerCase().trim(),
-        passwordHash,
-        loginMethod: "email",
-        lastSignedIn: new Date(),
-      } as any);
-
-      await issueSession(req, res, openId, name.trim());
-      res.json({ success: true });
-    } catch (err) {
-      console.error("[Auth] Register failed:", err);
-      res.status(500).json({ error: "Registration failed" });
-    }
-  });
-
-  // ── Login (email + password) ─────────────────────────────────────────────
+  // ── Login ────────────────────────────────────────────────────────────────
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body as { email?: string; password?: string };
 
       if (!email || !password) {
-        res.status(400).json({ error: "email and password are required" });
+        res.status(400).json({ error: "Email and password are required" });
         return;
       }
 
@@ -132,14 +53,13 @@ export function registerCustomAuthRoutes(app: Express) {
       }
 
       if (!user.isActive) {
-        res.status(403).json({ error: "Your account has been deactivated. Contact support." });
+        res.status(403).json({ error: "Your account has been deactivated. Contact support@awarecam.com." });
         return;
       }
 
       const passwordHash = (user as any).passwordHash;
       if (!passwordHash) {
-        // Account exists but was created via Google — no password set
-        res.status(401).json({ error: "This account uses Google Sign-In. Please use the 'Sign in with Google' button." });
+        res.status(401).json({ error: "Invalid email or password" });
         return;
       }
 
@@ -154,140 +74,177 @@ export function registerCustomAuthRoutes(app: Express) {
       res.json({ success: true });
     } catch (err) {
       console.error("[Auth] Login failed:", err);
-      res.status(500).json({ error: "Login failed" });
+      res.status(500).json({ error: "Login failed. Please try again." });
     }
   });
 
-  // ── Google OAuth — initiate ───────────────────────────────────────────────
-  app.get("/api/auth/google", async (req: Request, res: Response) => {
+  // ── Logout ───────────────────────────────────────────────────────────────
+  app.post("/api/auth/logout", (req: Request, res: Response) => {
+    const cookieOptions = getSessionCookieOptions(req);
+    res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
+    res.json({ success: true });
+  });
+
+  // ── Forgot Password ──────────────────────────────────────────────────────
+  app.post("/api/auth/forgot-password", async (req: Request, res: Response) => {
     try {
-      // Determine the base URL: prefer origin from query param (sent by frontend), else derive from request
-      const origin = (req.query.origin as string) || `${req.protocol}://${req.get("host")}`;
-      const url = await getGoogleOAuthUrl(origin);
-      res.redirect(302, url);
+      const { email } = req.body as { email?: string };
+
+      if (!email) {
+        res.status(400).json({ error: "Email is required" });
+        return;
+      }
+
+      // Always return success to prevent email enumeration
+      const user = await db.getUserByEmail(email.toLowerCase().trim());
+      if (!user || !user.isActive) {
+        res.json({ success: true, message: "If that email exists, a reset link has been sent." });
+        return;
+      }
+
+      const token = nanoid(48);
+      const expiresAt = new Date(Date.now() + RESET_TOKEN_EXPIRES_MS);
+      await db.createPasswordResetToken(user.id, token, expiresAt);
+
+      // Determine the base URL from the request origin header or host
+      const origin = req.headers.origin || `${req.protocol}://${req.get("host")}`;
+      const resetUrl = `${origin}/reset-password?token=${token}`;
+
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: user.email!,
+        subject: "Reset your AwareCam password",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0f172a; color: #f1f5f9; border-radius: 12px;">
+            <div style="margin-bottom: 24px;">
+              <span style="font-size: 20px; font-weight: bold; color: #22d3ee;">AwareCam</span>
+              <span style="font-size: 14px; color: #94a3b8; margin-left: 8px;">Partner Portal</span>
+            </div>
+            <h2 style="color: #f1f5f9; margin-bottom: 8px;">Reset your password</h2>
+            <p style="color: #94a3b8; margin-bottom: 24px;">
+              We received a request to reset the password for your AwareCam account (<strong style="color: #f1f5f9;">${user.email}</strong>).
+              Click the button below to set a new password. This link expires in 1 hour.
+            </p>
+            <a href="${resetUrl}" style="display: inline-block; background: #22d3ee; color: #0f172a; font-weight: bold; padding: 12px 28px; border-radius: 8px; text-decoration: none; margin-bottom: 24px;">
+              Reset Password
+            </a>
+            <p style="color: #64748b; font-size: 13px;">
+              If you didn't request this, you can safely ignore this email. Your password won't change.
+            </p>
+            <hr style="border: none; border-top: 1px solid #1e293b; margin: 24px 0;" />
+            <p style="color: #64748b; font-size: 12px;">AwareCam Partner Portal &bull; support@awarecam.com</p>
+          </div>
+        `,
+      });
+
+      res.json({ success: true, message: "If that email exists, a reset link has been sent." });
     } catch (err) {
-      console.error("[Auth] Google initiate failed:", err);
-      res.status(500).json({ error: "Failed to initiate Google sign-in" });
+      console.error("[Auth] Forgot password failed:", err);
+      res.status(500).json({ error: "Failed to send reset email. Please try again." });
     }
   });
 
-  // ── Google OAuth — callback ───────────────────────────────────────────────
-  app.get("/api/auth/google/callback", async (req: Request, res: Response) => {
+  // ── Reset Password ───────────────────────────────────────────────────────
+  app.post("/api/auth/reset-password", async (req: Request, res: Response) => {
     try {
-      const code = req.query.code as string;
-      const state = req.query.state as string;
+      const { token, password } = req.body as { token?: string; password?: string };
 
-      if (!code) {
-        res.status(400).json({ error: "Missing code from Google" });
+      if (!token || !password) {
+        res.status(400).json({ error: "Token and new password are required" });
         return;
       }
 
-      // Decode the base64 state to get the origin/redirectBase
-      let redirectBase: string;
-      try {
-        redirectBase = Buffer.from(state, "base64").toString("utf8");
-        // Validate it looks like a URL
-        new URL(redirectBase);
-      } catch {
-        redirectBase = `${req.protocol}://${req.get("host")}`;
-      }
-
-      const redirectUri = `${redirectBase}/api/auth/google/callback`;
-      const googleUser = await exchangeGoogleCode(code, redirectUri);
-
-      // Find or create user
-      let user = await db.getUserByGoogleId(googleUser.sub);
-      if (!user) {
-        // Try by email (account may have been created with email/password first)
-        user = await db.getUserByEmail(googleUser.email.toLowerCase());
-      }
-
-      if (user) {
-        // Update googleId if not set
-        if (!(user as any).googleId) {
-          await db.upsertUser({
-            openId: user.openId,
-            googleId: googleUser.sub,
-            loginMethod: "google",
-            lastSignedIn: new Date(),
-          } as any);
-        } else {
-          await db.upsertUser({ openId: user.openId, lastSignedIn: new Date() } as any);
-        }
-      } else {
-        // New user via Google
-        const openId = `google_${nanoid(24)}`;
-        await db.upsertUser({
-          openId,
-          name: googleUser.name,
-          email: googleUser.email.toLowerCase(),
-          googleId: googleUser.sub,
-          loginMethod: "google",
-          lastSignedIn: new Date(),
-        } as any);
-        user = await db.getUserByGoogleId(googleUser.sub);
-      }
-
-      if (!user) {
-        res.status(500).json({ error: "Failed to create user account" });
+      if (password.length < 8) {
+        res.status(400).json({ error: "Password must be at least 8 characters" });
         return;
       }
 
-      if (!user.isActive) {
-        res.redirect(302, `${redirectBase}/?error=deactivated`);
+      const resetToken = await db.getPasswordResetToken(token);
+      if (!resetToken) {
+        res.status(400).json({ error: "Invalid or expired reset link. Please request a new one." });
         return;
       }
 
-      await issueSession(req, res, user.openId, user.name || googleUser.name);
-      res.redirect(302, `${redirectBase}/dashboard`);
+      if (resetToken.usedAt) {
+        res.status(400).json({ error: "This reset link has already been used. Please request a new one." });
+        return;
+      }
+
+      if (new Date() > resetToken.expiresAt) {
+        res.status(400).json({ error: "This reset link has expired. Please request a new one." });
+        return;
+      }
+
+      const passwordHash = await bcrypt.hash(password, 12);
+      await db.updateUserPassword(resetToken.userId, passwordHash);
+      await db.markPasswordResetTokenUsed(token);
+
+      res.json({ success: true, message: "Password updated successfully. You can now log in." });
     } catch (err) {
-      console.error("[Auth] Google callback failed:", err);
-      res.status(500).json({ error: "Google sign-in failed" });
+      console.error("[Auth] Reset password failed:", err);
+      res.status(500).json({ error: "Failed to reset password. Please try again." });
     }
   });
 
-  // ── Admin seed (one-time bootstrap) ─────────────────────────────────────
-  // Promotes a user to admin role by email + a shared secret token.
-  // Only works when ADMIN_SEED_TOKEN env var is set on the server.
+  // ── Seed Admin (one-time bootstrap) ─────────────────────────────────────
+  // Creates the first admin account. Protected by ADMIN_SEED_TOKEN env var.
+  // After the first admin is created, use the admin panel to create additional users.
   app.post("/api/auth/seed-admin", async (req: Request, res: Response) => {
     try {
-      const { email, token, password } = req.body as { email?: string; token?: string; password?: string };
+      const { email, password, name, token } = req.body as {
+        email?: string; password?: string; name?: string; token?: string;
+      };
+
       const seedToken = process.env.ADMIN_SEED_TOKEN;
       if (!seedToken || !token || token !== seedToken) {
         res.status(403).json({ error: "Forbidden" });
         return;
       }
-      const normalizedEmail = (email || "").toLowerCase().trim();
+
+      if (!email || !password) {
+        res.status(400).json({ error: "email and password are required" });
+        return;
+      }
+
+      if (password.length < 8) {
+        res.status(400).json({ error: "Password must be at least 8 characters" });
+        return;
+      }
+
+      const normalizedEmail = email.toLowerCase().trim();
       let user = await db.getUserByEmail(normalizedEmail);
+
       if (!user) {
-        // Create the user if they don't exist
-        const passwordHash = password ? await bcrypt.hash(password, 10) : null;
-        const openId = `seed-admin-${nanoid(8)}`;
+        const passwordHash = await bcrypt.hash(password, 12);
+        const openId = `admin_${nanoid(24)}`;
         await db.upsertUser({
           openId,
-          name: normalizedEmail.split("@")[0],
+          name: (name || normalizedEmail.split("@")[0]).trim(),
           email: normalizedEmail,
           loginMethod: "email",
-          passwordHash: passwordHash ?? undefined,
+          passwordHash,
           role: "admin",
           portalRole: "admin",
           isActive: true,
+          lastSignedIn: new Date(),
         });
         user = await db.getUserByEmail(normalizedEmail);
-      } else if (password) {
-        // Update password hash if provided
-        const passwordHash = await bcrypt.hash(password, 10);
+      } else {
+        // Update password and promote to admin
+        const passwordHash = await bcrypt.hash(password, 12);
         await db.updateUserPassword(user.id, passwordHash);
+        await db.updateUserRole(user.id, "admin");
       }
+
       if (!user) {
-        res.status(500).json({ error: "Failed to create/find user" });
+        res.status(500).json({ error: "Failed to create admin account" });
         return;
       }
-      await db.updateUserRole(user.id, "admin");
-      res.json({ success: true, message: `User ${email} is now admin` });
+
+      res.json({ success: true, message: `Admin account created for ${normalizedEmail}. You can now log in.` });
     } catch (err) {
       console.error("[Auth] Seed admin failed:", err);
-      res.status(500).json({ error: "Failed to promote user" });
+      res.status(500).json({ error: "Failed to create admin account" });
     }
   });
 }

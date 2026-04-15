@@ -13,6 +13,8 @@ import Sales from "./pages/Sales";
 import Assistant from "./pages/Assistant";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { useAuth } from "./_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
@@ -23,7 +25,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   const [location, navigate] = useLocation();
 
   useEffect(() => {
-    if (!loading && !isAuthenticated && location !== "/" && location !== "/login") {
+    if (!loading && !isAuthenticated && location !== "/" && location !== "/login" && location !== "/forgot-password" && !location.startsWith("/reset-password")) {
       navigate("/login");
     }
   }, [isAuthenticated, loading, location, navigate]);
@@ -50,6 +52,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password" component={ResetPassword} />
       <Route path="/dashboard">
         <AuthGuard><Dashboard /></AuthGuard>
       </Route>

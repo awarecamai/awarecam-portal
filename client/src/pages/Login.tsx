@@ -1,226 +1,166 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { trpc } from "@/lib/trpc";
+import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Link, useLocation } from "wouter";
 
 export default function Login() {
   const [, navigate] = useLocation();
-  const [tab, setTab] = useState<"login" | "register">("login");
+  const utils = trpc.useUtils();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Login form state
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-
-  // Register form state
-  const [regName, setRegName] = useState("");
-  const [regEmail, setRegEmail] = useState("");
-  const [regPassword, setRegPassword] = useState("");
-  const [regConfirm, setRegConfirm] = useState("");
-
-  const utils = trpc.useUtils();
-
-  async function handleLogin(e: React.FormEvent) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+        body: JSON.stringify({ email: email.trim(), password }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Login failed");
-        return;
-      }
-      await utils.auth.me.invalidate();
-      navigate("/dashboard");
-    } catch {
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
 
-  async function handleRegister(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    if (regPassword !== regConfirm) {
-      setError("Passwords do not match");
-      return;
-    }
-    if (regPassword.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ name: regName, email: regEmail, password: regPassword }),
-      });
       const data = await res.json();
+
       if (!res.ok) {
-        setError(data.error || "Registration failed");
+        setError(data.error || "Login failed. Please try again.");
         return;
       }
+
       await utils.auth.me.invalidate();
       navigate("/dashboard");
     } catch {
-      setError("Network error. Please try again.");
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1e] flex flex-col items-center justify-center px-4">
-      {/* Logo / brand */}
-      <div className="mb-8 text-center">
-        <div className="flex items-center justify-center mb-2">
-          <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc/awarecam_logo_full_8e2d3e8d.png"
-            alt="AwareCam"
-            className="h-12 object-contain"
-          />
-        </div>
-        <p className="text-blue-400 text-sm">Partner Portal</p>
+    <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-3xl" />
       </div>
 
-      <Card className="w-full max-w-md bg-[#111827] border-white/10 text-white shadow-2xl">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl text-white text-center">Welcome back</CardTitle>
-          <CardDescription className="text-gray-400 text-center">Sign in to access your partner resources</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <div className="relative w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-3 mb-2">
+            <img
+              src="https://cdn.manus.im/webdev/awarecamhub-7vq3kth4/1744574481-awarecam-logo.png"
+              alt="AwareCam"
+              className="h-10 object-contain"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          </div>
+          <p className="text-slate-400 text-sm mt-1">Partner Portal</p>
+        </div>
+
+        <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+          <h1 className="text-xl font-semibold text-white mb-1">Sign in to your account</h1>
+          <p className="text-slate-400 text-sm mb-6">
+            Enter your credentials to access the partner portal.
+          </p>
+
           {error && (
-            <Alert className="mb-4 bg-red-900/30 border-red-500/50 text-red-300">
+            <Alert className="mb-5 border-red-500/30 bg-red-500/10 text-red-400">
+              <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
-          <Tabs value={tab} onValueChange={(v) => { setTab(v as any); setError(""); }}>
-            <TabsList className="w-full bg-white/5 mb-5">
-              <TabsTrigger value="login" className="flex-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white">Sign In</TabsTrigger>
-              <TabsTrigger value="register" className="flex-1 data-[state=active]:bg-blue-600 data-[state=active]:text-white">Register</TabsTrigger>
-            </TabsList>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-slate-300 text-sm">Email address</Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+                className="bg-slate-800/60 border-slate-600/50 text-white placeholder:text-slate-500 focus:border-cyan-500/60 h-10"
+              />
+            </div>
 
-            {/* Login tab */}
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="login-email" className="text-gray-300">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@company.com"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="login-password" className="text-gray-300">Password</Label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    autoComplete="current-password"
-                    placeholder="••••••••"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-blue-500"
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={loading}>
-                  {loading ? "Signing in…" : "Sign In"}
-                </Button>
-              </form>
-            </TabsContent>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-slate-300 text-sm">Password</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="bg-slate-800/60 border-slate-600/50 text-white placeholder:text-slate-500 focus:border-cyan-500/60 h-10 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
 
-            {/* Register tab */}
-            <TabsContent value="register">
-              <form onSubmit={handleRegister} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="reg-name" className="text-gray-300">Full Name</Label>
-                  <Input
-                    id="reg-name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Your name"
-                    value={regName}
-                    onChange={(e) => setRegName(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="reg-email" className="text-gray-300">Email</Label>
-                  <Input
-                    id="reg-email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@company.com"
-                    value={regEmail}
-                    onChange={(e) => setRegEmail(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="reg-password" className="text-gray-300">Password</Label>
-                  <Input
-                    id="reg-password"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="Min. 8 characters"
-                    value={regPassword}
-                    onChange={(e) => setRegPassword(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="reg-confirm" className="text-gray-300">Confirm Password</Label>
-                  <Input
-                    id="reg-confirm"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="Repeat password"
-                    value={regConfirm}
-                    onChange={(e) => setRegConfirm(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-blue-500"
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={loading}>
-                  {loading ? "Creating account…" : "Create Account"}
-                </Button>
-                <p className="text-xs text-gray-500 text-center">
-                  New accounts are reviewed by an admin before portal access is granted.
-                </p>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+            <Button
+              type="submit"
+              disabled={loading || !email || !password}
+              className="w-full h-10 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold transition-colors mt-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Signing in…
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </Button>
+          </form>
 
-      <p className="mt-6 text-xs text-gray-600">
-        © {new Date().getFullYear()} AwareCam · Partner Portal
-      </p>
+          <div className="mt-6 pt-5 border-t border-slate-700/50 text-center">
+            <p className="text-slate-500 text-xs">
+              Don't have an account?{" "}
+              <a
+                href="mailto:support@awarecam.com"
+                className="text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                Contact your administrator
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <p className="text-center text-slate-600 text-xs mt-6">
+          © {new Date().getFullYear()} AwareCam. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 }

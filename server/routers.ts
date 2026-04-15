@@ -132,7 +132,8 @@ export const appRouter = router({
         // Build messages for LLM
         const messages = [
           { role: "system" as const, content: systemPrompt },
-          ...history.slice(-20).map(m => ({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ...(history as any[]).slice(-20).map((m: { role: string; content: string }) => ({
             role: m.role as "user" | "assistant",
             content: m.content,
           })),

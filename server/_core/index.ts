@@ -3,7 +3,6 @@ import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { registerCustomAuthRoutes } from "./customAuth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -34,9 +33,7 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  // Manus OAuth callback (kept for backward compat)
-  registerOAuthRoutes(app);
-  // Custom auth: email/password + Google OAuth
+  // Custom auth: email/password with admin-only user creation
   registerCustomAuthRoutes(app);
   // tRPC API
   app.use(

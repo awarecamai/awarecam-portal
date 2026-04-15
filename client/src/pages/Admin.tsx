@@ -55,7 +55,7 @@ export default function Admin() {
     onError: () => toast.error("Failed to update status"),
   });
 
-  const filteredUsers = (usersQuery.data || []).filter((u) => {
+  const filteredUsers = (usersQuery.data || []).filter((u: { name?: string | null; email?: string | null }) => {
     if (!search) return true;
     const q = search.toLowerCase();
     return (
@@ -79,8 +79,8 @@ export default function Admin() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
             { label: "Total Users", value: usersQuery.data?.length || 0, icon: Users, color: "text-primary" },
-            { label: "Resellers", value: usersQuery.data?.filter(u => (u as any).portalRole === "reseller").length || 0, icon: Shield, color: "text-blue-400" },
-            { label: "Integrators", value: usersQuery.data?.filter(u => (u as any).portalRole === "integrator").length || 0, icon: Shield, color: "text-teal-400" },
+            { label: "Resellers", value: usersQuery.data?.filter((u: { portalRole?: string }) => u.portalRole === "reseller").length || 0, icon: Shield, color: "text-blue-400" },
+            { label: "Integrators", value: usersQuery.data?.filter((u: { portalRole?: string }) => u.portalRole === "integrator").length || 0, icon: Shield, color: "text-teal-400" },
             { label: "Activity Events", value: activityQuery.data?.length || 0, icon: Activity, color: "text-orange-400" },
           ].map((stat) => {
             const Icon = stat.icon;
@@ -163,10 +163,10 @@ export default function Admin() {
                         </td>
                       </tr>
                     ) : (
-                      filteredUsers.map((u) => {
+                      filteredUsers.map((u: { id: number; name?: string | null; email?: string | null; portalRole?: string; isActive?: boolean; lastSignedIn?: Date | string | null; [key: string]: unknown }) => {
                         const pRole = (u as any).portalRole || "end_user";
                         const isActive = (u as any).isActive !== false;
-                        const initials = (u.name || "U").split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+                        const initials = (u.name || "U").split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
                         return (
                           <tr key={u.id} className="hover:bg-secondary/30 transition-colors">
                             <td className="px-4 py-3">
