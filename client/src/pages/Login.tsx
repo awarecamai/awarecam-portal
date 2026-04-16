@@ -67,7 +67,7 @@ export default function Login() {
         </div>
 
         <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
-          <h1 className="text-xl font-semibold text-white mb-1">Sign in to your account</h1>
+          <h1 className="text-xl font-semibold text-white mb-1">Sign in to your account </h1>
           <p className="text-slate-400 text-sm mb-6">
             Enter your credentials to access the partner portal.
           </p>
