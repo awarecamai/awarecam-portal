@@ -158,7 +158,7 @@ export default function Login() {
         </div>
 
         <p className="text-center text-slate-600 text-xs mt-6">
-          © {new Date().getFullYear()} AwareCam. All rights reserved.
+          © {new Date().getFullYear()} AwareCam · Partner Portal
         </p>
       </div>
     </div>
