@@ -83,7 +83,7 @@ export default function Assistant() {
 
   return (
     <PortalLayout>
-      <div className="flex h-screen flex-col">
+      <div className="flex flex-col" style={{ height: 'calc(100dvh - 56px)' }} data-chat-container>
         {/* Header */}
         <div className="flex items-center justify-between px-4 md:px-8 py-4 md:py-5 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-3">
@@ -121,7 +121,7 @@ export default function Assistant() {
               </p>
 
               {/* Quick prompts */}
-              <div className="grid grid-cols-2 gap-3 w-full max-w-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
                 {quickPrompts.map((qp) => {
                   const Icon = qp.icon;
                   return (
@@ -157,7 +157,7 @@ export default function Assistant() {
                   )}
                   <div
                     className={cn(
-                      "max-w-2xl rounded-2xl px-4 py-3 text-sm",
+                      "max-w-[85vw] sm:max-w-2xl rounded-2xl px-4 py-3 text-sm",
                       msg.role === "user"
                         ? "bg-primary/20 border border-primary/30 rounded-tr-sm text-foreground"
                         : "bg-card border border-border rounded-tl-sm"

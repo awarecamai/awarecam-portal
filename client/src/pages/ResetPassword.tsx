@@ -87,7 +87,7 @@ export default function ResetPassword() {
           <p className="text-slate-400 text-sm mt-1">Partner Portal</p>
         </div>
 
-        <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-5 sm:p-8 shadow-2xl">
           {success ? (
             <div className="text-center py-4">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-500/10 border border-green-500/20 mb-4">

@@ -164,7 +164,7 @@ export default function Documents() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 flex-wrap justify-end">
                     <Button
                       size="sm"
                       variant="ghost"

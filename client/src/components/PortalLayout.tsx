@@ -113,6 +113,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setMobileOpen(false)}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                   isActive
@@ -197,7 +198,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto md:ml-0 pt-14 md:pt-0">
+      <main className="flex-1 overflow-auto md:ml-0 pt-14 md:pt-0 min-h-0">
         {children}
       </main>
     </div>

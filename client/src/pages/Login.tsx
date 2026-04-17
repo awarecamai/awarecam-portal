@@ -53,7 +53,7 @@ export default function Login() {
         <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-md px-0">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-2">
             <img
@@ -66,7 +66,7 @@ export default function Login() {
           <p className="text-slate-400 text-sm mt-1">Partner Portal</p>
         </div>
 
-        <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-5 sm:p-8 shadow-2xl">
           <h1 className="text-xl font-semibold text-white mb-1">Sign in to your account </h1>
           <p className="text-slate-400 text-sm mb-6">
             Enter your credentials to access the partner portal.

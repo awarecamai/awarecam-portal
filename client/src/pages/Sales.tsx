@@ -460,9 +460,9 @@ export default function Sales() {
 
         {/* Brochures Tab */}
         {activeTab === "brochures" && (
-          <div className="flex gap-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Vertical selector */}
-            <div className="w-52 flex-shrink-0 space-y-1.5">
+            <div className="flex md:flex-col flex-wrap gap-1.5 md:w-52 md:flex-shrink-0 md:space-y-0">
               {verticals.map((v, i) => {
                 const VIcon = v.icon;
                 return (
@@ -532,7 +532,7 @@ export default function Sales() {
                       <p className="text-sm text-foreground leading-relaxed">{pitch}</p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Pain Points */}
                       <div className="p-4 rounded-xl border border-border bg-card">
                         <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
@@ -584,9 +584,9 @@ export default function Sales() {
 
         {/* Platform Presentation Tab */}
         {activeTab === "platform" && (
-          <div className="flex gap-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Slide nav */}
-            <div className="w-44 flex-shrink-0 space-y-1">
+            <div className="flex md:flex-col flex-wrap gap-1 md:w-44 md:flex-shrink-0">
               {platformSlides.map((slide, i) => (
                 <button
                   key={i}

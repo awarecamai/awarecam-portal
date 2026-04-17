@@ -846,7 +846,7 @@ export default function Installation() {
 
   return (
     <PortalLayout>
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {/* Header */}
         <div className="mb-8">
           <h1
@@ -921,7 +921,7 @@ export default function Installation() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
           {/* Steps column */}
           <div className="lg:col-span-2">
             <div className="p-6 rounded-xl border border-border bg-card">
