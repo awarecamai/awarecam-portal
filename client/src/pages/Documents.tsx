@@ -3,7 +3,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PortalLayout from "@/components/PortalLayout";
 import { trpc } from "@/lib/trpc";
-import { BookOpen, Download, Eye, FileText, Search, X, ChevronRight, Scale, Wrench, TrendingUp, Cpu } from "lucide-react";
+import {
+  BookOpen, Download, Eye, FileText, Search, X,
+  Scale, Wrench, TrendingUp, Cpu, Loader2, Globe
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -20,58 +23,136 @@ const categoryConfig = {
   technical_reference: { label: "docs.technical", icon: Cpu, color: "text-purple-400" },
 };
 
-// Static document data (seeded content from markdown files)
-const staticDocs = [
-  // Legal
-  { id: 1, title: "Reseller Agreement (US LLC)", titleHe: "הסכם מפיץ (ארה\"ב)", category: "legal", fileType: "markdown", language: "en", accessRoles: "reseller,integrator,admin", sortOrder: 1 },
-  { id: 2, title: "Reseller Agreement (Israel Ltd)", titleHe: "הסכם מפיץ (ישראל)", category: "legal", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 2 },
-  { id: 3, title: "End-User Service Agreement (US LLC)", titleHe: "הסכם שירות למשתמש קצה (ארה\"ב)", category: "legal", fileType: "markdown", language: "en", accessRoles: "reseller,integrator,end_user,admin", sortOrder: 3 },
-  { id: 4, title: "End-User Service Agreement (Israel Ltd)", titleHe: "הסכם שירות למשתמש קצה (ישראל)", category: "legal", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,end_user,admin", sortOrder: 4 },
-  // Setup Guides
-  { id: 5, title: "Kiosk Device Setup Guide (Raspberry Pi)", titleHe: "מדריך התקנת קיוסק (Raspberry Pi)", category: "setup_guides", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,end_user,admin", sortOrder: 1 },
-  { id: 6, title: "Windows Edge Device Setup Guide", titleHe: "מדריך התקנת התקן קצה Windows", category: "setup_guides", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 2 },
-  { id: 7, title: "Direct RTSP Setup Guide", titleHe: "מדריך חיבור RTSP ישיר", category: "setup_guides", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 3 },
-  { id: 8, title: "Client Welcome & Quick Start Guide", titleHe: "מדריך ברוכים הבאים ללקוח", category: "setup_guides", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,end_user,admin", sortOrder: 4 },
-  // Sales Training
-  { id: 9, title: "Reseller & Integrator Guide", titleHe: "מדריך מפיצים ואינטגרטורים", category: "sales_training", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 1 },
-  { id: 10, title: "Partner Onboarding Checklist", titleHe: "רשימת קליטת שותפים", category: "sales_training", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 2 },
-  { id: 11, title: "Mobile App User Guide", titleHe: "מדריך אפליקציית המובייל", category: "sales_training", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,end_user,admin", sortOrder: 3 },
-  // Technical Reference
-  { id: 12, title: "Camera Compatibility & RTSP Reference", titleHe: "תאימות מצלמות וכתובות RTSP", category: "technical_reference", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 1 },
-  { id: 13, title: "Network & Firewall Requirements", titleHe: "דרישות רשת וחומת אש", category: "technical_reference", fileType: "markdown", language: "both", accessRoles: "reseller,integrator,admin", sortOrder: 2 },
-];
+type Doc = {
+  id: number;
+  title: string;
+  titleHe: string | null;
+  category: string;
+  fileType: string;
+  language: string;
+  contentEn: string | null;
+  contentHe: string | null;
+  fileUrlEn: string | null;
+  fileUrlHe: string | null;
+  accessRoles: string;
+  sortOrder: number;
+};
+
+// Download content as a styled HTML file that prints/saves as PDF
+function downloadAsPdf(title: string, content: string, isRtl: boolean) {
+  const htmlContent = `<!DOCTYPE html>
+<html lang="${isRtl ? "he" : "en"}" dir="${isRtl ? "rtl" : "ltr"}">
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  body { font-family: 'Inter', Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 40px; color: #1a1a2e; line-height: 1.7; font-size: 14px; }
+  h1 { font-size: 24px; font-weight: 700; color: #0a0f1e; border-bottom: 2px solid #06b6d4; padding-bottom: 12px; margin-bottom: 24px; }
+  h2 { font-size: 18px; font-weight: 600; color: #0a0f1e; margin-top: 28px; }
+  h3 { font-size: 15px; font-weight: 600; color: #374151; margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #f0f9ff; padding: 8px 12px; text-align: left; font-weight: 600; border: 1px solid #e0f2fe; }
+  td { padding: 8px 12px; border: 1px solid #e0f2fe; }
+  code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; }
+  pre { background: #f1f5f9; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  blockquote { border-left: 4px solid #06b6d4; margin: 16px 0; padding: 8px 16px; background: #f0f9ff; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0; }
+  .logo { font-size: 20px; font-weight: 700; color: #06b6d4; }
+  .meta { font-size: 12px; color: #64748b; margin-top: 4px; }
+  @media print { body { margin: 0; padding: 20px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="logo">AwareCam Partner Portal</div>
+    <div class="meta">${title} · ${new Date().toLocaleDateString()}</div>
+  </div>
+</div>
+<div id="content"></div>
+<script>
+// Simple markdown to HTML converter
+const md = ${JSON.stringify(content)};
+function mdToHtml(text) {
+  return text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')
+    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')
+    .replace(/\`(.+?)\`/g, '<code>$1</code>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\\/li>\\n?)+/g, '<ul>$&</ul>')
+    .replace(/^\\d+\\. (.+)$/gm, '<li>$1</li>')
+    .replace(/\\|(.+)\\|/g, (m) => '<tr>' + m.split('|').filter(Boolean).map(c => '<td>' + c.trim() + '</td>').join('') + '</tr>')
+    .replace(/(<tr>.*<\\/tr>\\n?)+/g, '<table>$&</table>')
+    .replace(/\\n\\n/g, '</p><p>')
+    .replace(/^(?!<[h|u|o|t|b|p|l])(.+)$/gm, '$1');
+}
+document.getElementById('content').innerHTML = '<p>' + mdToHtml(md) + '</p>';
+window.onload = () => window.print();
+</script>
+</body>
+</html>`;
+
+  const blob = new Blob([htmlContent], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title.replace(/[^a-z0-9\u0590-\u05ff]/gi, "_")}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 export default function Documents() {
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>("all");
   const [search, setSearch] = useState("");
-  const [previewDoc, setPreviewDoc] = useState<typeof staticDocs[0] | null>(null);
+  const [previewDoc, setPreviewDoc] = useState<Doc | null>(null);
+  const [previewLang, setPreviewLang] = useState<"en" | "he">("en");
   const portalRole = (user as any)?.portalRole || "end_user";
 
   const logViewMutation = trpc.documents.logView.useMutation();
 
-  const filteredDocs = staticDocs.filter((doc) => {
-    const roles = doc.accessRoles.split(",").map((r) => r.trim());
-    if (!roles.includes(portalRole)) return false;
-    if (activeCategory !== "all" && doc.category !== activeCategory) return false;
+  // Fetch from database
+  const { data: allDocs = [], isLoading } = trpc.documents.list.useQuery(
+    { category: activeCategory === "all" ? undefined : activeCategory },
+    { staleTime: 60_000 }
+  );
+
+  // Fetch full content when previewing
+  const { data: fullDoc, isLoading: loadingContent } = trpc.documents.get.useQuery(
+    { id: previewDoc?.id ?? 0 },
+    { enabled: !!previewDoc, staleTime: 300_000 }
+  );
+
+  const filteredDocs = (allDocs as Doc[]).filter((doc) => {
     const title = language === "he" && doc.titleHe ? doc.titleHe : doc.title;
     if (search && !title.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
 
-  const handlePreview = (doc: typeof staticDocs[0]) => {
+  const handlePreview = (doc: Doc) => {
     setPreviewDoc(doc);
+    setPreviewLang(language === "he" && (doc.language === "both" || doc.language === "he") ? "he" : "en");
     logViewMutation.mutate({ documentId: doc.id, title: doc.title });
   };
 
-  const getDocContent = (doc: typeof staticDocs[0]) => {
-    const contentMap: Record<number, string> = {
-      1: `# Reseller Agreement (US LLC)\n\n**AwareCam Inc.** | Governing Law: Delaware, USA\n\nThis agreement establishes the terms between AwareCam Inc. and the Reseller for distribution of AwareCam services.\n\n## Key Terms\n- Reseller receives wholesale pricing and may set their own retail rates\n- Minimum commitment: 10 cameras per month\n- Payment terms: Net 30\n- Territory: Non-exclusive unless otherwise agreed in writing\n\n*Full agreement available upon request from legal@awarecam.com*`,
-      5: `# Kiosk Device Setup Guide\n\n## Overview\nThe AwareCam Kiosk is a Raspberry Pi 4 (8GB) pre-configured as an edge AI gateway.\n\n## Step 1: Unbox and Connect\n1. Remove the Raspberry Pi Kiosk from packaging\n2. Connect the power adapter (USB-C, 5V/3A)\n3. Connect an Ethernet cable to your local network\n4. Power on the device\n\n## Step 2: Provision\n1. Open the AwareCam Partner Portal\n2. Navigate to **Installation Guides → Kiosk**\n3. Follow the on-screen provisioning wizard\n\n## Step 3: Add Cameras\nSee the full visual guide in **Installation Guides** for step-by-step instructions with images.`,
-      12: `# Camera Compatibility & RTSP Reference\n\n## Supported Brands\nAwareCam works with any IP camera supporting RTSP (H.264/H.265).\n\n| Brand | Default User | Default Pass | RTSP Sub Stream |\n|---|---|---|---|\n| Dahua | admin | admin | \`/cam/realmonitor?channel=1&subtype=1\` |\n| Hikvision | admin | 12345 | \`/Streaming/Channels/102\` |\n| Reolink | admin | (blank) | \`/h264Preview_01_sub\` |\n| Axis | root | pass | \`/axis-media/media.amp\` |\n\n## Recommended Stream Settings\n- Resolution: 640×480 or 720p\n- FPS: 10–15\n- Bitrate: 512–1024 Kbps\n- Codec: H.264`,
-    };
-    return contentMap[doc.id] || `# ${doc.title}\n\nFull document content is available for download. Click **Download** to get the complete document.\n\nFor questions, contact support@awarecam.com`;
+  const getContent = (doc: typeof fullDoc) => {
+    if (!doc) return "";
+    if (previewLang === "he" && doc.contentHe) return doc.contentHe;
+    return doc.contentEn || doc.contentHe || "";
+  };
+
+  const handleDownload = (doc: typeof fullDoc) => {
+    if (!doc) return;
+    const content = getContent(doc);
+    const title = previewLang === "he" && doc.titleHe ? doc.titleHe : doc.title;
+    const isRtl = previewLang === "he";
+    downloadAsPdf(title, content, isRtl);
   };
 
   return (
@@ -100,6 +181,7 @@ export default function Documents() {
         <div className="flex gap-2 mb-6 flex-wrap">
           {(Object.entries(categoryConfig) as [Category, typeof categoryConfig.all][]).map(([key, cfg]) => {
             const Icon = cfg.icon;
+            const count = (allDocs as Doc[]).filter(d => key === "all" || d.category === key).length;
             return (
               <button
                 key={key}
@@ -117,10 +199,7 @@ export default function Documents() {
                   "text-xs px-1.5 py-0.5 rounded-full",
                   activeCategory === key ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
                 )}>
-                  {staticDocs.filter(d => {
-                    const roles = d.accessRoles.split(",").map(r => r.trim());
-                    return roles.includes(portalRole) && (key === "all" || d.category === key);
-                  }).length}
+                  {count}
                 </span>
               </button>
             );
@@ -128,7 +207,12 @@ export default function Documents() {
         </div>
 
         {/* Document Grid */}
-        {filteredDocs.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Loading documents…</span>
+          </div>
+        ) : filteredDocs.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-30" />
             <p>{t("docs.noResults")}</p>
@@ -153,14 +237,14 @@ export default function Documents() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <span className="text-sm font-medium text-foreground truncate">{title}</span>
-                      {hasHebrew && language === "en" && (
+                      {hasHebrew && (
                         <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/30 text-primary flex-shrink-0">
                           EN + עב
                         </Badge>
                       )}
                     </div>
                     <div className="text-xs text-muted-foreground capitalize">
-                      {t(`docs.${doc.category.replace("_", "")}`) || doc.category.replace("_", " ")}
+                      {catConfig?.label ? t(catConfig.label) : doc.category.replace(/_/g, " ")}
                     </div>
                   </div>
 
@@ -172,25 +256,7 @@ export default function Documents() {
                       onClick={() => handlePreview(doc)}
                     >
                       <Eye className="w-3.5 h-3.5" />
-                      {t("docs.preview")}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-xs gap-1.5"
-                      onClick={() => {
-                        const content = getDocContent(doc);
-                        const blob = new Blob([content], { type: "text/markdown" });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.href = url;
-                        a.download = `${doc.title.replace(/[^a-z0-9]/gi, "_")}.md`;
-                        a.click();
-                        URL.revokeObjectURL(url);
-                      }}
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      {t("docs.download")}
+                      <span className="hidden sm:inline">{t("docs.preview")}</span>
                     </Button>
                   </div>
                 </div>
@@ -202,47 +268,68 @@ export default function Documents() {
 
       {/* Preview Modal */}
       {previewDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="w-full max-w-3xl max-h-[85vh] flex flex-col bg-card border border-border rounded-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-4xl max-h-[92vh] flex flex-col bg-card border border-border rounded-2xl overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border flex-shrink-0">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">
-                  {language === "he" && previewDoc.titleHe ? previewDoc.titleHe : previewDoc.title}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border flex-shrink-0 gap-3">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground truncate">
+                  {previewLang === "he" && previewDoc.titleHe ? previewDoc.titleHe : previewDoc.title}
                 </h2>
                 <p className="text-xs text-muted-foreground capitalize mt-0.5">
-                  {previewDoc.category.replace("_", " ")}
+                  {previewDoc.category.replace(/_/g, " ")}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                {/* Language toggle */}
+                {(previewDoc.language === "both") && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-xs gap-1.5 border-primary/30 text-primary"
+                    onClick={() => setPreviewLang(l => l === "en" ? "he" : "en")}
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    {previewLang === "en" ? "עברית" : "English"}
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   variant="outline"
                   className="text-xs gap-1.5"
-                  onClick={() => {
-                    const content = getDocContent(previewDoc);
-                    const blob = new Blob([content], { type: "text/markdown" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `${previewDoc.title.replace(/[^a-z0-9]/gi, "_")}.md`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  }}
+                  disabled={loadingContent || !fullDoc}
+                  onClick={() => handleDownload(fullDoc)}
                 >
                   <Download className="w-3.5 h-3.5" />
-                  {t("docs.download")}
+                  <span className="hidden sm:inline">{t("docs.download")}</span>
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => setPreviewDoc(null)}>
                   <X className="w-4 h-4" />
                 </Button>
               </div>
             </div>
+
             {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="prose prose-invert prose-sm max-w-none">
-                <Streamdown>{getDocContent(previewDoc)}</Streamdown>
-              </div>
+            <div
+              className="flex-1 overflow-y-auto p-4 sm:p-6"
+              dir={previewLang === "he" ? "rtl" : "ltr"}
+            >
+              {loadingContent ? (
+                <div className="flex items-center justify-center py-16 text-muted-foreground gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Loading document…</span>
+                </div>
+              ) : (
+                <div className="prose prose-invert prose-sm max-w-none">
+                  {getContent(fullDoc) ? (
+                    <Streamdown>{getContent(fullDoc)}</Streamdown>
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      No content available for this document.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
