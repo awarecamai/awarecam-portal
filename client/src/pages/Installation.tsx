@@ -1,13 +1,67 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PortalLayout from "@/components/PortalLayout";
+import { trpc } from "@/lib/trpc";
 import {
   Monitor, Cpu, Wifi, CheckCircle, AlertTriangle, ChevronDown, ChevronUp,
   ExternalLink, Download, UserPlus, Building2, Camera, Zap, Shield,
   ArrowRight, Info, Globe, Settings, Play, Bell, MapPin, Bot,
-  Layers, Eye, Smartphone, Lock, BarChart3, Video
+  Layers, Eye, Smartphone, Lock, BarChart3, Video, FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/** Download a document as PDF via the server endpoint */
+function downloadDocPdf(docId: number, title: string, lang: "en" | "he") {
+  const a = document.createElement("a");
+  a.href = `/api/documents/${docId}/pdf?lang=${lang}`;
+  a.download = `${title.replace(/[^a-z0-9\u05d0-\u05ea\s]/gi, "_").replace(/\s+/g, "_")}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+/** Banner showing PDF download links for installation guides */
+function InstallationPdfBanner({ language }: { language: string }) {
+  const { data: docs = [] } = trpc.documents.list.useQuery(undefined, { staleTime: 300_000 });
+  const installDocs = (docs as any[]).filter((d: any) => d.category === "setup_guides");
+  if (installDocs.length === 0) return null;
+  return (
+    <div className="mt-4 p-4 rounded-xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground flex-shrink-0">
+        <FileText className="w-4 h-4 text-primary" />
+        <span>{language === "he" ? "הורד מדריכים כ-PDF:" : "Download guides as PDF:"}</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {installDocs.map((doc: any) => {
+          const hasHe = doc.language === "both" || doc.language === "he";
+          const title = language === "he" && doc.titleHe ? doc.titleHe : doc.title;
+          return (
+            <div key={doc.id} className="flex items-center gap-1">
+              <button
+                onClick={() => downloadDocPdf(doc.id, doc.title, "en")}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-card border border-border hover:border-primary/40 text-foreground transition-colors"
+              >
+                <Download className="w-3 h-3 text-primary" />
+                {doc.title.replace(/Setup Guide|Guide|Installation/gi, "").trim() || doc.title}
+                <span className="text-muted-foreground ml-0.5">EN</span>
+              </button>
+              {hasHe && (
+                <button
+                  onClick={() => downloadDocPdf(doc.id, doc.titleHe || doc.title, "he")}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-card border border-border hover:border-primary/40 text-foreground transition-colors"
+                >
+                  <Download className="w-3 h-3 text-primary" />
+                  <span dir="rtl">{(doc.titleHe || doc.title).replace(/מדריך|התקנה/g, "").trim()}</span>
+                  <span className="text-muted-foreground ml-0.5">עב</span>
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 type GuideType = "account" | "kiosk" | "windows" | "rtsp";
 
@@ -837,7 +891,7 @@ function StepCard({ step, isLast }: { step: Step; isLast: boolean }) {
 // MAIN PAGE
 // ─────────────────────────────────────────────
 export default function Installation() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeGuide, setActiveGuide] = useState<GuideType>("account");
   const [showTroubleshooting, setShowTroubleshooting] = useState(false);
   const [expandedTrouble, setExpandedTrouble] = useState<number | null>(null);
@@ -860,6 +914,7 @@ export default function Installation() {
             <strong className="text-foreground">Full Product Guide</strong> to learn the app from A to Z,
             then follow the hardware guide for your deployment type.
           </p>
+          <InstallationPdfBanner language={language} />
         </div>
 
         {/* Deployment type selector */}

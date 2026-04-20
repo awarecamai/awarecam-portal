@@ -1,12 +1,66 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PortalLayout from "@/components/PortalLayout";
+import { trpc } from "@/lib/trpc";
 import {
   TrendingUp, Shield, Building2, GraduationCap, Flame, HardHat,
   ChevronDown, ChevronUp, CheckCircle, XCircle, Monitor, BookOpen,
-  Warehouse, Factory, Heart, ShoppingCart, Landmark, Church, Download
+  Warehouse, Factory, Heart, ShoppingCart, Landmark, Church, Download, FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/** Download a document as PDF via the server endpoint */
+function downloadDocPdf(docId: number, title: string, lang: "en" | "he") {
+  const a = document.createElement("a");
+  a.href = `/api/documents/${docId}/pdf?lang=${lang}`;
+  a.download = `${title.replace(/[^a-z0-9\u05d0-\u05ea\s]/gi, "_").replace(/\s+/g, "_")}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+/** Banner showing PDF download links for sales training documents */
+function SalesPdfBanner({ language }: { language: string }) {
+  const { data: docs = [] } = trpc.documents.list.useQuery(undefined, { staleTime: 300_000 });
+  const salesDocs = (docs as any[]).filter((d: any) => d.category === "sales_training");
+  if (salesDocs.length === 0) return null;
+  return (
+    <div className="mt-4 p-4 rounded-xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground flex-shrink-0">
+        <FileText className="w-4 h-4 text-primary" />
+        <span>{language === "he" ? "הורד חומרי מכירות כ-PDF:" : "Download sales materials as PDF:"}</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {salesDocs.map((doc: any) => {
+          const hasHe = doc.language === "both" || doc.language === "he";
+          const shortTitle = (s: string) => s.length > 28 ? s.substring(0, 26) + "…" : s;
+          return (
+            <div key={doc.id} className="flex items-center gap-1">
+              <button
+                onClick={() => downloadDocPdf(doc.id, doc.title, "en")}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-card border border-border hover:border-primary/40 text-foreground transition-colors"
+              >
+                <Download className="w-3 h-3 text-primary" />
+                {shortTitle(doc.title)}
+                <span className="text-muted-foreground ml-0.5">EN</span>
+              </button>
+              {hasHe && (
+                <button
+                  onClick={() => downloadDocPdf(doc.id, doc.titleHe || doc.title, "he")}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-card border border-border hover:border-primary/40 text-foreground transition-colors"
+                >
+                  <Download className="w-3 h-3 text-primary" />
+                  <span dir="rtl">{shortTitle(doc.titleHe || doc.title)}</span>
+                  <span className="text-muted-foreground ml-0.5">עב</span>
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 type SalesTab = "objections" | "brochures" | "platform";
 
@@ -393,6 +447,7 @@ export default function Sales() {
             {t("sales.title")}
           </h1>
           <p className="text-muted-foreground">{t("sales.subtitle")}</p>
+          <SalesPdfBanner language={language} />
         </div>
 
         {/* Tabs */}

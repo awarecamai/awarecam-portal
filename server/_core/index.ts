@@ -4,6 +4,7 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerCustomAuthRoutes } from "./customAuth";
+import { registerPdfRoutes } from "../pdfRoutes";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -37,6 +38,8 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // Custom auth: email/password with admin-only user creation
   registerCustomAuthRoutes(app);
+  // PDF download routes
+  registerPdfRoutes(app);
 
   // tRPC API
   app.use(
