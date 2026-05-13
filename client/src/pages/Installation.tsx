@@ -68,7 +68,7 @@ type GuideType = "account" | "kiosk" | "windows" | "rtsp";
 const CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663429873569/7vQ3kTH4U9Q6fPjutgr3Jc";
 
 const SCREENS = {
-  login:              `${CDN}/01_login_683c4c48.webp`,
+  login:              `/manus-storage/login_screen_new_25ee6807.png`,
   onboarding:         `${CDN}/02_onboarding_welcome_5a8d39cd.webp`,
   orgSetup:           `${CDN}/03_organization_setup_5e8ba708.webp`,
   dashboard:          `${CDN}/04_dashboard_760d23b7.png`,
