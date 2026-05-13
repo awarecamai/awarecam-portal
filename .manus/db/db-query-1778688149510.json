@@ -1,0 +1,55 @@
+{
+  "query": "SELECT COUNT(*) as total FROM documents; SELECT id, title, category, language FROM documents ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3JnCPdgYTCh6MeV.16d8ad6d2eb0 --database 7vQ3kTH4U9Q6fPjutgr3Jc --execute SELECT COUNT(*) as total FROM documents; SELECT id, title, category, language FROM documents ORDER BY id;",
+  "rows": [
+    {
+      "total": "13"
+    },
+    {
+      "total": "id\ttitle\tcategory\tlanguage"
+    },
+    {
+      "total": "1\tReseller Agreement (US LLC)\tlegal\ten"
+    },
+    {
+      "total": "2\tReseller Agreement (Israel Ltd)\tlegal\tboth"
+    },
+    {
+      "total": "3\tEnd-User Service Agreement (US LLC)\tlegal\ten"
+    },
+    {
+      "total": "4\tEnd-User Service Agreement (Israel Ltd)\tlegal\tboth"
+    },
+    {
+      "total": "5\tPartner Onboarding Checklist\tsetup_guides\tboth"
+    },
+    {
+      "total": "6\tClient Welcome & Quick Start Guide\tsetup_guides\tboth"
+    },
+    {
+      "total": "7\tKiosk Device Setup Guide (Raspberry Pi)\tsetup_guides\tboth"
+    },
+    {
+      "total": "8\tWindows Edge Device Setup Guide\tsetup_guides\tboth"
+    },
+    {
+      "total": "9\tDirect RTSP / Cloud-Only Setup Guide\tsetup_guides\tboth"
+    },
+    {
+      "total": "10\tMobile App User Guide\tsetup_guides\tboth"
+    },
+    {
+      "total": "11\tReseller & Integrator Guide\tsales_training\tboth"
+    },
+    {
+      "total": "12\tCamera Compatibility & RTSP Reference\ttechnical_reference\tboth"
+    },
+    {
+      "total": "13\tNetwork & Firewall Requirements\ttechnical_reference\tboth"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\n13\nid\ttitle\tcategory\tlanguage\n1\tReseller Agreement (US LLC)\tlegal\ten\n2\tReseller Agreement (Israel Ltd)\tlegal\tboth\n3\tEnd-User Service Agreement (US LLC)\tlegal\ten\n4\tEnd-User Service Agreement (Israel Ltd)\tlegal\tboth\n5\tPartner Onboarding Checklist\tsetup_guides\tboth\n6\tClient Welcome & Quick Start Guide\tsetup_guides\tboth\n7\tKiosk Device Setup Guide (Raspberry Pi)\tsetup_guides\tboth\n8\tWindows Edge Device Setup Guide\tsetup_guides\tboth\n9\tDirect RTSP / Cloud-Only Setup Guide\tsetup_guides\tboth\n10\tMobile App User Guide\tsetup_guides\tboth\n11\tReseller & Integrator Guide\tsales_training\tboth\n12\tCamera Compatibility & RTSP Reference\ttechnical_reference\tboth\n13\tNetwork & Firewall Requirements\ttechnical_reference\tboth\n",
+  "stderr": "",
+  "execution_time_ms": 2155
+}

@@ -1,0 +1,88 @@
+{
+  "query": "SELECT id, title, isPublished, accessRoles FROM documents ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3JnCPdgYTCh6MeV.16d8ad6d2eb0 --database 7vQ3kTH4U9Q6fPjutgr3Jc --execute SELECT id, title, isPublished, accessRoles FROM documents ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Reseller Agreement (US LLC)",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "2",
+      "title": "Reseller Agreement (Israel Ltd)",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "3",
+      "title": "End-User Service Agreement (US LLC)",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,end_user,admin"
+    },
+    {
+      "id": "4",
+      "title": "End-User Service Agreement (Israel Ltd)",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,end_user,admin"
+    },
+    {
+      "id": "5",
+      "title": "Partner Onboarding Checklist",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "6",
+      "title": "Client Welcome & Quick Start Guide",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,end_user,admin"
+    },
+    {
+      "id": "7",
+      "title": "Kiosk Device Setup Guide (Raspberry Pi)",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "8",
+      "title": "Windows Edge Device Setup Guide",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "9",
+      "title": "Direct RTSP / Cloud-Only Setup Guide",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "10",
+      "title": "Mobile App User Guide",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,end_user,admin"
+    },
+    {
+      "id": "11",
+      "title": "Reseller & Integrator Guide",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "12",
+      "title": "Camera Compatibility & RTSP Reference",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    },
+    {
+      "id": "13",
+      "title": "Network & Firewall Requirements",
+      "isPublished": "1",
+      "accessRoles": "reseller,integrator,admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tisPublished\taccessRoles\n1\tReseller Agreement (US LLC)\t1\treseller,integrator,admin\n2\tReseller Agreement (Israel Ltd)\t1\treseller,integrator,admin\n3\tEnd-User Service Agreement (US LLC)\t1\treseller,integrator,end_user,admin\n4\tEnd-User Service Agreement (Israel Ltd)\t1\treseller,integrator,end_user,admin\n5\tPartner Onboarding Checklist\t1\treseller,integrator,admin\n6\tClient Welcome & Quick Start Guide\t1\treseller,integrator,end_user,admin\n7\tKiosk Device Setup Guide (Raspberry Pi)\t1\treseller,integrator,admin\n8\tWindows Edge Device Setup Guide\t1\treseller,integrator,admin\n9\tDirect RTSP / Cloud-Only Setup Guide\t1\treseller,integrator,admin\n10\tMobile App User Guide\t1\treseller,integrator,end_user,admin\n11\tReseller & Integrator Guide\t1\treseller,integrator,admin\n12\tCamera Compatibility & RTSP Reference\t1\treseller,integrator,admin\n13\tNetwork & Firewall Requirements\t1\treseller,integrator,admin\n",
+  "stderr": "",
+  "execution_time_ms": 1865
+}

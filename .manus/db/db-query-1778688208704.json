@@ -1,0 +1,1074 @@
+{
+  "query": "SELECT id, name, email, role, portalRole, isActive FROM users ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3JnCPdgYTCh6MeV.16d8ad6d2eb0 --database 7vQ3kTH4U9Q6fPjutgr3Jc --execute SELECT id, name, email, role, portalRole, isActive FROM users ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "yehoshua",
+      "email": "yehoshua@jivehire.com",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "150065",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "150066",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "180001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "180002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "180003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "180004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "210008",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "240002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240008",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240009",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240010",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240011",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "240012",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270001",
+      "name": "Yehoshua Kotlar",
+      "email": "yehoshua@awarecam.com",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "270002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "270004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "270005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "270007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "270008",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270009",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270010",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270011",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270012",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270013",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270014",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270015",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "270016",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "270017",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "300001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300008",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300009",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300010",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300011",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300012",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300013",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300014",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300015",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300016",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300017",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300018",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300019",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300020",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300021",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "300022",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "300023",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300024",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300025",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300026",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300027",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "300028",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "300029",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300030",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300031",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300032",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300033",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300034",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300035",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300036",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300037",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300038",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300039",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300040",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300041",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "300042",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "300043",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "330001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "330002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "330003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "330004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "330005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "330006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "330007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "360001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "390001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "390002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "390003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "420001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "420002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "450001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "450002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "450003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "450004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "450005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "450006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "450007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "450008",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "480001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "480002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "510001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510005",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510006",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510007",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510008",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510009",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510010",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510011",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510012",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510013",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510014",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510015",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "510016",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "user",
+      "portalRole": "end_user",
+      "isActive": "1"
+    },
+    {
+      "id": "540001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "540002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "540003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "540004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "570001",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "570002",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "570003",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    },
+    {
+      "id": "570004",
+      "name": "NULL",
+      "email": "NULL",
+      "role": "admin",
+      "portalRole": "admin",
+      "isActive": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\trole\tportalRole\tisActive\n1\tyehoshua\tyehoshua@jivehire.com\tadmin\tadmin\t1\n150065\tNULL\tNULL\tadmin\tadmin\t1\n150066\tNULL\tNULL\tadmin\tadmin\t1\n180001\tNULL\tNULL\tadmin\tadmin\t1\n180002\tNULL\tNULL\tadmin\tadmin\t1\n180003\tNULL\tNULL\tadmin\tadmin\t1\n180004\tNULL\tNULL\tadmin\tadmin\t1\n210001\tNULL\tNULL\tadmin\tadmin\t1\n210002\tNULL\tNULL\tadmin\tadmin\t1\n210003\tNULL\tNULL\tadmin\tadmin\t1\n210004\tNULL\tNULL\tadmin\tadmin\t1\n210005\tNULL\tNULL\tadmin\tadmin\t1\n210006\tNULL\tNULL\tadmin\tadmin\t1\n210007\tNULL\tNULL\tadmin\tadmin\t1\n210008\tNULL\tNULL\tadmin\tadmin\t1\n240002\tNULL\tNULL\tuser\tend_user\t1\n240003\tNULL\tNULL\tuser\tend_user\t1\n240004\tNULL\tNULL\tuser\tend_user\t1\n240005\tNULL\tNULL\tuser\tend_user\t1\n240006\tNULL\tNULL\tuser\tend_user\t1\n240007\tNULL\tNULL\tuser\tend_user\t1\n240008\tNULL\tNULL\tuser\tend_user\t1\n240009\tNULL\tNULL\tuser\tend_user\t1\n240010\tNULL\tNULL\tuser\tend_user\t1\n240011\tNULL\tNULL\tuser\tend_user\t1\n240012\tNULL\tNULL\tuser\tend_user\t1\n270001\tYehoshua Kotlar\tyehoshua@awarecam.com\tadmin\tadmin\t1\n270002\tNULL\tNULL\tuser\tend_user\t1\n270003\tNULL\tNULL\tadmin\tadmin\t1\n270004\tNULL\tNULL\tadmin\tadmin\t1\n270005\tNULL\tNULL\tuser\tend_user\t1\n270006\tNULL\tNULL\tadmin\tadmin\t1\n270007\tNULL\tNULL\tadmin\tadmin\t1\n270008\tNULL\tNULL\tuser\tend_user\t1\n270009\tNULL\tNULL\tuser\tend_user\t1\n270010\tNULL\tNULL\tuser\tend_user\t1\n270011\tNULL\tNULL\tuser\tend_user\t1\n270012\tNULL\tNULL\tuser\tend_user\t1\n270013\tNULL\tNULL\tuser\tend_user\t1\n270014\tNULL\tNULL\tuser\tend_user\t1\n270015\tNULL\tNULL\tuser\tend_user\t1\n270016\tNULL\tNULL\tadmin\tadmin\t1\n270017\tNULL\tNULL\tadmin\tadmin\t1\n300001\tNULL\tNULL\tuser\tend_user\t1\n300002\tNULL\tNULL\tuser\tend_user\t1\n300003\tNULL\tNULL\tuser\tend_user\t1\n300004\tNULL\tNULL\tuser\tend_user\t1\n300005\tNULL\tNULL\tuser\tend_user\t1\n300006\tNULL\tNULL\tuser\tend_user\t1\n300007\tNULL\tNULL\tuser\tend_user\t1\n300008\tNULL\tNULL\tuser\tend_user\t1\n300009\tNULL\tNULL\tuser\tend_user\t1\n300010\tNULL\tNULL\tuser\tend_user\t1\n300011\tNULL\tNULL\tuser\tend_user\t1\n300012\tNULL\tNULL\tuser\tend_user\t1\n300013\tNULL\tNULL\tuser\tend_user\t1\n300014\tNULL\tNULL\tuser\tend_user\t1\n300015\tNULL\tNULL\tuser\tend_user\t1\n300016\tNULL\tNULL\tuser\tend_user\t1\n300017\tNULL\tNULL\tuser\tend_user\t1\n300018\tNULL\tNULL\tuser\tend_user\t1\n300019\tNULL\tNULL\tuser\tend_user\t1\n300020\tNULL\tNULL\tuser\tend_user\t1\n300021\tNULL\tNULL\tadmin\tadmin\t1\n300022\tNULL\tNULL\tadmin\tadmin\t1\n300023\tNULL\tNULL\tuser\tend_user\t1\n300024\tNULL\tNULL\tuser\tend_user\t1\n300025\tNULL\tNULL\tuser\tend_user\t1\n300026\tNULL\tNULL\tuser\tend_user\t1\n300027\tNULL\tNULL\tadmin\tadmin\t1\n300028\tNULL\tNULL\tadmin\tadmin\t1\n300029\tNULL\tNULL\tuser\tend_user\t1\n300030\tNULL\tNULL\tuser\tend_user\t1\n300031\tNULL\tNULL\tuser\tend_user\t1\n300032\tNULL\tNULL\tuser\tend_user\t1\n300033\tNULL\tNULL\tuser\tend_user\t1\n300034\tNULL\tNULL\tuser\tend_user\t1\n300035\tNULL\tNULL\tuser\tend_user\t1\n300036\tNULL\tNULL\tuser\tend_user\t1\n300037\tNULL\tNULL\tuser\tend_user\t1\n300038\tNULL\tNULL\tuser\tend_user\t1\n300039\tNULL\tNULL\tuser\tend_user\t1\n300040\tNULL\tNULL\tuser\tend_user\t1\n300041\tNULL\tNULL\tuser\tend_user\t1\n300042\tNULL\tNULL\tadmin\tadmin\t1\n300043\tNULL\tNULL\tadmin\tadmin\t1\n330001\tNULL\tNULL\tuser\tend_user\t1\n330002\tNULL\tNULL\tuser\tend_user\t1\n330003\tNULL\tNULL\tuser\tend_user\t1\n330004\tNULL\tNULL\tuser\tend_user\t1\n330005\tNULL\tNULL\tuser\tend_user\t1\n330006\tNULL\tNULL\tuser\tend_user\t1\n330007\tNULL\tNULL\tuser\tend_user\t1\n360001\tNULL\tNULL\tuser\tend_user\t1\n390001\tNULL\tNULL\tadmin\tadmin\t1\n390002\tNULL\tNULL\tadmin\tadmin\t1\n390003\tNULL\tNULL\tuser\tend_user\t1\n420001\tNULL\tNULL\tadmin\tadmin\t1\n420002\tNULL\tNULL\tadmin\tadmin\t1\n450001\tNULL\tNULL\tuser\tend_user\t1\n450002\tNULL\tNULL\tuser\tend_user\t1\n450003\tNULL\tNULL\tuser\tend_user\t1\n450004\tNULL\tNULL\tuser\tend_user\t1\n450005\tNULL\tNULL\tuser\tend_user\t1\n450006\tNULL\tNULL\tuser\tend_user\t1\n450007\tNULL\tNULL\tadmin\tadmin\t1\n450008\tNULL\tNULL\tadmin\tadmin\t1\n480001\tNULL\tNULL\tadmin\tadmin\t1\n480002\tNULL\tNULL\tadmin\tadmin\t1\n510001\tNULL\tNULL\tuser\tend_user\t1\n510002\tNULL\tNULL\tuser\tend_user\t1\n510003\tNULL\tNULL\tuser\tend_user\t1\n510004\tNULL\tNULL\tuser\tend_user\t1\n510005\tNULL\tNULL\tuser\tend_user\t1\n510006\tNULL\tNULL\tuser\tend_user\t1\n510007\tNULL\tNULL\tuser\tend_user\t1\n510008\tNULL\tNULL\tuser\tend_user\t1\n510009\tNULL\tNULL\tuser\tend_user\t1\n510010\tNULL\tNULL\tuser\tend_user\t1\n510011\tNULL\tNULL\tuser\tend_user\t1\n510012\tNULL\tNULL\tuser\tend_user\t1\n510013\tNULL\tNULL\tuser\tend_user\t1\n510014\tNULL\tNULL\tuser\tend_user\t1\n510015\tNULL\tNULL\tuser\tend_user\t1\n510016\tNULL\tNULL\tuser\tend_user\t1\n540001\tNULL\tNULL\tadmin\tadmin\t1\n540002\tNULL\tNULL\tadmin\tadmin\t1\n540003\tNULL\tNULL\tadmin\tadmin\t1\n540004\tNULL\tNULL\tadmin\tadmin\t1\n570001\tNULL\tNULL\tadmin\tadmin\t1\n570002\tNULL\tNULL\tadmin\tadmin\t1\n570003\tNULL\tNULL\tadmin\tadmin\t1\n570004\tNULL\tNULL\tadmin\tadmin\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1862
+}

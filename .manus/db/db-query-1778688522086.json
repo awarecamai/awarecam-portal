@@ -1,0 +1,26 @@
+{
+  "query": "SELECT id, name, email, openId, role, portalRole FROM users WHERE name = 'yehoshua' OR email LIKE '%yehoshua%' OR email LIKE '%jivehire%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3JnCPdgYTCh6MeV.16d8ad6d2eb0 --database 7vQ3kTH4U9Q6fPjutgr3Jc --execute SELECT id, name, email, openId, role, portalRole FROM users WHERE name = 'yehoshua' OR email LIKE '%yehoshua%' OR email LIKE '%jivehire%' LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "yehoshua",
+      "email": "yehoshua@jivehire.com",
+      "openId": "EUFB5ctYWbR6VYYjwFhz72",
+      "role": "admin",
+      "portalRole": "admin"
+    },
+    {
+      "id": "270001",
+      "name": "Yehoshua Kotlar",
+      "email": "yehoshua@awarecam.com",
+      "openId": "admin_anKrolWZNAStrNP7WraenGSy",
+      "role": "admin",
+      "portalRole": "admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\topenId\trole\tportalRole\n1\tyehoshua\tyehoshua@jivehire.com\tEUFB5ctYWbR6VYYjwFhz72\tadmin\tadmin\n270001\tYehoshua Kotlar\tyehoshua@awarecam.com\tadmin_anKrolWZNAStrNP7WraenGSy\tadmin\tadmin\n",
+  "stderr": "",
+  "execution_time_ms": 1825
+}
